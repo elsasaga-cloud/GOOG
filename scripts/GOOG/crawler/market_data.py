@@ -5,7 +5,7 @@
 import json, datetime, pathlib, ssl, urllib.request
 from pathlib import Path
 
-DATA_DIR=Path("/home/user/GOOG/data/GOOG")
+DATA_DIR=Path(__file__).resolve().parents[3] / "data" / "GOOG"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 def fetch_stooq(symbol):

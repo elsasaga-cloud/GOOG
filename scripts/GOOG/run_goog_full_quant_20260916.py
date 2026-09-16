@@ -1,7 +1,9 @@
 import pandas as pd, numpy as np, sys, os, json, math
+from pathlib import Path
 from datetime import datetime, timedelta
 
-csv_path="/home/user/GOOG/GOOG N=3000.csv"
+_ROOT=Path(__file__).resolve().parents[2]
+csv_path=str(_ROOT/"GOOG N=3000.csv")
 # read with utf-8-sig, handle footer
 df=pd.read_csv(csv_path, encoding='utf-8-sig', dtype=str)
 # Filter valid date rows: 日期 like YYYY-MM-DD
@@ -349,8 +351,9 @@ summary={
 }
 
 # save
-os.makedirs("/home/user/GOOG/reports/GOOG/2026-09-16", exist_ok=True)
-with open("/home/user/GOOG/reports/GOOG/2026-09-16/quant_summary.json","w",encoding="utf-8") as f:
+_RPT=_ROOT/"reports"/"GOOG"/"2026-09-16"
+os.makedirs(_RPT, exist_ok=True)
+with open(_RPT/"quant_summary.json","w",encoding="utf-8") as f:
     json.dump(summary,f,ensure_ascii=False,indent=2)
 
 print(json.dumps(summary, ensure_ascii=False, indent=2))
