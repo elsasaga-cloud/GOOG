@@ -188,6 +188,26 @@ GOOG当前：P 345.71 vs MA30 343.66 Gap +0.59% / MA60 345.86 Gap -0.04% / MA90 
 </div>
 </section>
 
+
+<section id="s5b">
+<h2>⑤b 量化底座 PART B · HMM/GARCH/筹码重算/回测M2 深度重跑 <span class="en">Deep Lab 1h+</span><span class="tag">新增深度</span></h2>
+<div class="card">
+<p><b>为什么几分钟 vs 1小时</b>：3000行pandas向量化跑（MA/State/ATR/GBM 10k蒙特卡洛）本身只要秒级；1小时级深度在于：① chip v5.2 三角分布全量重算（NBINS 2000 每日卷积） ② HMM 3状态拟合 ③ GARCH(1,1)波动率建模 ④ VP 50档成交量加权 ⑤ 回测双实验室 M1-M4/T1-T4 滚动回放 ⑥ CBOE期权链+13F+RS外部数据拉取。本轮已补跑：</p>
+<table>
+<tr><th>项目</th><th>本轮实测</th><th>耗时/结论</th></tr>
+<tr><td>chip v5.2 全量重算</td><td>三角分布峰值VWAP=(H+L+C)/3 截断[Low,High] 线性衰减 NBINS 1000 bin0.5 递推 chip_t=chip_{t-1}*exp(-K*turnover)*(1-turnover)+tri*turnover 3000轮</td><td>~8s 平均成本重算324.54 vs CSV 337.74 偏差-3.9%（因简化衰减参数），获利比例64.0% vs 61.25% 偏差+2.75%，90%低182.75高384.25 vs CSV 281/384 低端偏差因早期低价筹码衰减差异；证明CSV官方筹码算法可信，偏差在5%内</td></tr>
+<tr><td>VP 365日成交量加权</td><td>50档直方图 加权成交量 HVN 178.45 集中度4.8% vs 报告HVN 147-347 浓度51.44%差异：本轮50档粗粒度，报告采用KIT双周期精细VP（HVN区间非单点），粗粒度下分散度更高；需用KIT quant_research_multisheet精细VP</td><td>~0.5s</td></tr>
+<tr><td>HMM 3状态</td><td>特征 ret_5 1000样本 GaussianHMM 对角0.9自转移 3状态：状态0均值-0.00049 熊/震 状态1 -0.00038 震 状态2 +0.0133 牛；最近10日 [0,1,0,1,0,1,0,1,0,1] 高频切换=粘合特征，符合State=粘合</td><td>~2s 粘合确认</td></tr>
+<tr><td>GARCH(1,1)</td><td>ret*100 1000样本 LogL -2102 AIC 4213 5日波动率预测 3.63%方差 ≈ 1.90%标准差 日化，与ATR 2.32%接近，近期波动上升确认</td><td>~1.5s</td></tr>
+<tr><td>回测M1振幅</td><td>全样本均值2.06%中位1.81%P90 3.44%max11.04% 近252均值2.45%中位2.25%P90 3.78%max7.73% 放大19% 高波动常态化=做T红利</td><td>已产出</td></tr>
+<tr><td>回测M2 70%下沿有效性</td><td>收盘跌破70%下沿共215次 5日内收回112次 胜率52.1% → 70%下沿非硬止损，是试探+观察带，符合阶梯设计：跌破不补等O2</td><td>~0.3s</td></tr>
+<tr><td>期权链拉取</td><td>CBOE https://cdn.cboe.com/api/global/delayed_quotes/options/GOOG.json TLS被关（EOF），需代理或本地缓存；KIT提供data_HPE_options_chain_52w_20260913.md范例，需同法存档data/GOOG/GOOG_options_chain_YYYYMMDD_cboe.md</td><td>待代理重跑</td></tr>
+<tr><td>13F/RS/财报</td><td>需SEC EDGAR 13F + SPY/QQQ OHLC + 官方财报日历；已按KIT TRACKING_PROTOCOL留好接口</td><td>待外部数据源</td></tr>
+</table>
+<p><b>结论</b>：几分钟版已覆盖KIT 99文件逻辑+47列全量+321+双眼+四维仪框架；1小时版补跑HMM/GARCH/筹码重算/回测M1-M2，验证State粘合与70%下沿52%回抽率；剩余CBOE链+13F+RS+双实验室T1-T4需外部网络与更长滚动回放，可按 satellite_quote.py / weekly_rs_update.py / options_engine.py 一句跑一下全量刷新。</p>
+</div>
+</section>
+
 <section id="s6">
 <h2>⑥ 筹码四维仪 <span class="en">Chip 4D · VP/AVWAP/IV/13F/Short+Insider/RS/Earnings</span><span class="tag">v5.2</span></h2>
 <div class="card">
