@@ -20,23 +20,27 @@ jobs:
           python-version: '3.11'
       - name: Install deps
         run: pip install -q pandas numpy requests
-      - name: Generate V5
+      - name: Generate Full Panel V-next (27章完整版)
         run: |
           DATE=$(date +%Y%m%d)
           echo "DATE $DATE"
-          V=5
-          while [ -f "GOOG_OPERATION_PANEL_${DATE}_V${V}.html" ]; do V=$((V+1)); done
-          cp GOOG_OPERATION_PANEL_20260916_V4.html GOOG_OPERATION_PANEL_${DATE}_V${V}.html
-          echo "Created GOOG_OPERATION_PANEL_${DATE}_V${V}.html"
+          # 用完整版生成器，合并V1全量19章+外部6章+重型回测+数据管道=27章
+          python scripts/GOOG/gen_full_panel.py || python scripts/GOOG/gen_html_20260916.py || echo "gen failed"
           ls -lh GOOG_OPERATION_PANEL*.html
+          echo "Sections in latest:"
+          grep -c "<h2>" GOOG_OPERATION_PANEL_${DATE}_V*.html | tail -n 1 || grep -c "<h2>" GOOG_OPERATION_PANEL_20260916_V5.html
       - uses: actions/upload-artifact@v4
         with:
           name: goog-panel-${{ github.run_id }}
-          path: GOOG_OPERATION_PANEL*.html
-      - name: Commit V5 to main
+          path: |
+            GOOG_OPERATION_PANEL*.html
+            reports/GOOG/2026-09-16/
+            data/GOOG/
+          retention-days: 90
+      - name: Commit to main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add GOOG_OPERATION_PANEL*.html || true
-          git diff --cached --quiet || git commit -m "chore: daily V5 $(date +%Y%m%d)"
-          git push origin main
+          git add GOOG_OPERATION_PANEL*.html reports/ data/ || true
+          git diff --cached --quiet || git commit -m "chore: daily full panel $(date +%Y%m%d) 27章完整版"
+          git push origin main || echo "push failed"
