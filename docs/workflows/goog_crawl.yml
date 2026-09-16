@@ -2,8 +2,7 @@ name: GOOG Weekly Crawl & Panel
 
 on:
   schedule:
-    - cron: '0 3 * * 3'
-    - cron: '0 3 * * 5'
+    - cron: '0 3 * * *'  # 每天 03:00 UTC = 11:00 SGT 完全自动化
   workflow_dispatch:
     inputs:
       version:
