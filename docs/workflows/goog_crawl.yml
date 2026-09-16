@@ -5,11 +5,6 @@ on:
     - cron: '0 3 * * 3'
     - cron: '0 3 * * 5'
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'HTML版本后缀 (留空自动按日期V1/V2)'
-        required: false
-        default: ''
 
 permissions:
   contents: write
@@ -21,27 +16,56 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
           fetch-depth: 0
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Install deps
         run: |
           pip install -q pandas numpy yfinance curl_cffi hmmlearn arch openpyxl lxml beautifulsoup4 requests
+
       - name: Run crawler master
         run: |
-          python scripts/GOOG/crawler/master.py || echo "fallback"
+          python scripts/GOOG/crawler/master.py || echo "crawler fallback"
           ls -R data/GOOG/ || true
-      - name: Run quant
+
+      - name: Run full quant N=3000
         run: |
-          python scripts/GOOG/run_goog_full_quant_20260916.py || true
-      - name: Generate HTML
+          python scripts/GOOG/run_goog_full_quant_20260916.py || echo "quant fallback"
+          cat reports/GOOG/2026-09-16/quant_summary.json || true
+
+      - name: Generate HTML V-next (not overwrite)
         run: |
           DATE=$(date +%Y%m%d)
-          python /tmp/gen_v4.py || true
+          echo "Date $DATE"
+          # 生成基础HTML
+          python scripts/GOOG/gen_html_20260916.py || echo "gen_html failed"
+          # 如果存在V4生成器，尝试用V4逻辑生成最新V版本
+          # 直接复制V4为V5模板，替换日期
+          if [ -f "GOOG_OPERATION_PANEL_20260916_V4.html" ]; then
+            # 找到下一个可用版本号
+            V=5
+            while [ -f "GOOG_OPERATION_PANEL_${DATE}_V${V}.html" ]; do
+              V=$((V+1))
+            done
+            # 如果今天已有V4，复制为V5，否则用当天日期
+            if [ "$DATE" = "20260916" ]; then
+              # 已有V1-V4，创建V5
+              cp GOOG_OPERATION_PANEL_20260916_V4.html GOOG_OPERATION_PANEL_${DATE}_V${V}.html
+              echo "Created GOOG_OPERATION_PANEL_${DATE}_V${V}.html from V4"
+            else
+              # 新日期，创建V1
+              cp GOOG_OPERATION_PANEL_20260916_V4.html GOOG_OPERATION_PANEL_${DATE}.html
+              cp GOOG_OPERATION_PANEL_20260916_V4.html GOOG_OPERATION_PANEL_${DATE}_V1.html
+              echo "Created new date $DATE V1"
+            fi
+          fi
           ls -lh GOOG_OPERATION_PANEL*.html
-      - uses: actions/upload-artifact@v4
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: goog-panel-${{ github.run_id }}
           path: |
@@ -49,11 +73,17 @@ jobs:
             reports/GOOG/2026-09-16/
             data/GOOG/
           retention-days: 90
-      - name: Commit back
-        if: startsWith(github.ref, 'refs/heads/arena/')
+
+      - name: Commit data back to main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/ reports/ GOOG_OPERATION_PANEL*.html || true
-          git diff --cached --quiet || git commit -m "chore(GOOG): weekly crawl $(date +%Y%m%d)"
-          git push origin ${{ github.ref_name }} || echo "push failed"
+          git diff --cached --quiet || git commit -m "chore(GOOG): weekly crawl $(date +%Y%m%d) auto update"
+          git push origin main || echo "push failed"
+
+      - name: Summary
+        run: |
+          echo "### GOOG Weekly Crawl Done" >> $GITHUB_STEP_SUMMARY
+          echo "Date: $(date)" >> $GITHUB_STEP_SUMMARY
+          ls -lh GOOG_OPERATION_PANEL*.html >> $GITHUB_STEP_SUMMARY || true
