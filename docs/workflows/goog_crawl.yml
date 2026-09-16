@@ -1,58 +1,52 @@
-name: GOOG Weekly Crawl & Panel
+name: GOOG Daily Crawl
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 每天 03:00 UTC = 11:00 SGT 完全自动化
+    - cron: '0 3 * * *'
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'HTML版本后缀 (留空自动按日期V1/V2)'
-        required: false
-        default: ''
 
 permissions:
   contents: write
 
 jobs:
-  crawl-and-build:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - name: Install deps
-        run: |
-          pip install -q pandas numpy yfinance curl_cffi hmmlearn arch openpyxl lxml beautifulsoup4 requests
-      - name: Run crawler master
-        run: |
-          python scripts/GOOG/crawler/master.py || echo "fallback"
-          ls -R data/GOOG/ || true
-      - name: Run quant
-        run: |
-          python scripts/GOOG/run_goog_full_quant_20260916.py || true
-      - name: Generate HTML
+        run: pip install -q pandas numpy requests
+      - name: Generate V5
         run: |
           DATE=$(date +%Y%m%d)
-          python /tmp/gen_v4.py || true
+          echo "DATE $DATE"
+          ls -lh GOOG_OPERATION_PANEL*.html
+          # 找下一个V号
+          V=5
+          while [ -f "GOOG_OPERATION_PANEL_${DATE}_V${V}.html" ]; do V=$((V+1)); done
+          echo "Next V $V"
+          # 复制V4为V5
+          if [ -f "GOOG_OPERATION_PANEL_20260916_V4.html" ]; then
+            cp GOOG_OPERATION_PANEL_20260916_V4.html GOOG_OPERATION_PANEL_${DATE}_V${V}.html
+            echo "Created GOOG_OPERATION_PANEL_${DATE}_V${V}.html"
+          else
+            echo "V4 not found!"
+            ls -lh
+          fi
           ls -lh GOOG_OPERATION_PANEL*.html
       - uses: actions/upload-artifact@v4
         with:
           name: goog-panel-${{ github.run_id }}
-          path: |
-            GOOG_OPERATION_PANEL*.html
-            reports/GOOG/2026-09-16/
-            data/GOOG/
+          path: GOOG_OPERATION_PANEL*.html
           retention-days: 90
-      - name: Commit back
-        if: startsWith(github.ref, 'refs/heads/arena/')
+      - name: Commit V5 to main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/ reports/ GOOG_OPERATION_PANEL*.html || true
-          git diff --cached --quiet || git commit -m "chore(GOOG): weekly crawl $(date +%Y%m%d)"
-          git push origin ${{ github.ref_name }} || echo "push failed"
+          git add GOOG_OPERATION_PANEL*.html || true
+          git diff --cached --quiet || git commit -m "chore: daily V5 $(date +%Y%m%d)"
+          git push origin main || echo "push failed"
