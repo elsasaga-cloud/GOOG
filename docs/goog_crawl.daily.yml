@@ -1,0 +1,92 @@
+name: GOOG Daily Crawl
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: goog-daily-crawl
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # required so the later `git push` can authenticate as GITHUB_TOKEN
+          persist-credentials: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: pip install -q pandas numpy requests
+
+      - name: Refresh external data (9 categories)
+        continue-on-error: true
+        run: |
+          # crawler hits the live network; a failure must NOT block panel generation
+          python scripts/GOOG/crawler/master.py || echo "crawler failed -> reusing committed data/GOOG/"
+
+      - name: Generate Full Panel (27 chapters)
+        run: |
+          set -euo pipefail
+          export GOOG_PANEL_DATE="$(date -u +%Y%m%d)"
+          echo "GOOG_PANEL_DATE=$GOOG_PANEL_DATE"
+
+          # generator self-verifies <h2>==27 and exits non-zero otherwise
+          python scripts/GOOG/gen_full_panel.py
+
+          echo "--- generated panels ---"
+          ls -lh GOOG_OPERATION_PANEL*.html
+
+          echo "--- chapter counts ---"
+          # robust glob: on a fresh date V1 has NO _V suffix, so match both shapes
+          grep -c "<h2>" GOOG_OPERATION_PANEL_${GOOG_PANEL_DATE}*.html
+
+      - name: Assert latest panel has exactly 27 chapters
+        run: |
+          set -euo pipefail
+          export GOOG_PANEL_DATE="$(date -u +%Y%m%d)"
+          LATEST="$(ls -t GOOG_OPERATION_PANEL_${GOOG_PANEL_DATE}*.html | head -n 1)"
+          N="$(grep -c '<h2>' "$LATEST")"
+          echo "latest=$LATEST  <h2>=$N"
+          if [ "$N" -ne 27 ]; then
+            echo "::error::$LATEST has $N <h2> sections, expected 27"
+            exit 1
+          fi
+          echo "OK: $LATEST has 27 chapters"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: goog-panel-${{ github.run_id }}
+          path: |
+            GOOG_OPERATION_PANEL*.html
+            reports/
+            data/
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Commit to main
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add GOOG_OPERATION_PANEL*.html reports/ data/ || true
+          if git diff --cached --quiet; then
+            echo "nothing to commit -> skipping push"
+            exit 0
+          fi
+          DATE_TAG="$(date -u +%Y%m%d)"
+          git commit -m "chore: daily full panel ${DATE_TAG} 27章"
+          # actions/checkout leaves us in DETACHED HEAD with no local `main` branch,
+          # so `git push origin main` fails with "src refspec main does not match any".
+          # Push the checked-out commit to the remote branch instead.
+          git push origin HEAD:main
