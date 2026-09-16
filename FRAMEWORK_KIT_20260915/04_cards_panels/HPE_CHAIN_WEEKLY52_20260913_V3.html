@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HPE 期权权利金全档位面 · 仓库×盘面双维度 · 2026-09-13 V3</title>
+<!-- 模块清单（打开本页的 agent 第一眼读这里）：
+     ①数值对账(重拉核验) ②CSP全档位权利金面 ③CC全档位权利金面 ④双维度判定矩阵 ⑤52周逐周阶梯(承袭V1) ⑥回报率图示(PDF式·值得买典型) ⑦诚实清单 ⑧摘要卡
+     数据源：CBOE 延时链重拉核验（ts=9/11 收盘·与V1/V2同源·今日美东周六无新行情）；上游 data/HPE/HPE_options_chain_52w_20260913.md(#82+#84对账段)
+     规矩：V3 新文件禁覆盖 V1/V2/玩法页/面板；注册计划 P50 不自动改档（约束9/21/48）；每行带判定与推翻条件（约束11） -->
+<style>
+  :root{
+    --ink:#1a2332; --sub:#5a6a7e; --line:#e3e8ef; --bg:#f7f9fb; --card:#ffffff;
+    --blue:#1e5aa8; --teal:#0e7c6b; --amber:#b26a00; --red:#b3362c; --green:#1c7a3d; --purple:#6b4fa0;
+    --chip-green:#e6f4ea; --chip-amber:#fdf3e0; --chip-red:#fbe9e7; --chip-blue:#e8f0fb; --chip-teal:#e2f3f0; --chip-purple:#f0eaf8;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+       color:var(--ink); background:var(--bg); line-height:1.6; font-size:15px;}
+  .wrap{max-width:1140px; margin:0 auto; padding:24px 18px 70px;}
+  header.hero{background:linear-gradient(135deg,#0f2f52 0%,#1e5aa8 60%,#0e7c6b 130%);
+    color:#fff; border-radius:14px; padding:26px 30px 22px; margin-bottom:20px;}
+  header.hero h1{font-size:24px; margin-bottom:6px;}
+  header.hero p{opacity:.92; font-size:13.5px; max-width:960px;}
+  .nowbar{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;}
+  .nowbar div{background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.25);
+    border-radius:10px; padding:7px 14px; font-size:12.5px;}
+  .nowbar b{font-size:15px;}
+  .warn{background:#fff8e6; border:1px solid #ecd9a0; border-radius:10px; padding:10px 16px;
+    font-size:13px; margin-bottom:20px;}
+  .risk{background:#fff1f0; border:1px solid #f0c4bd; border-radius:10px; padding:10px 16px;
+    font-size:13px; margin-bottom:20px;}
+  section{margin-bottom:28px;}
+  h2{font-size:19px; padding:9px 0 7px; border-bottom:2px solid var(--blue); margin-bottom:14px; color:#12305c;}
+  h2 .en{font-size:12px; color:var(--sub); font-weight:normal; margin-left:8px;}
+  h2 .new{display:inline-block;font-size:10.5px;background:#1e5aa8;color:#fff;border-radius:12px;padding:1px 8px;margin-left:8px;vertical-align:2px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 20px; margin-bottom:14px;}
+  .card p{font-size:13.5px; margin:4px 0;}
+  table{width:100%; border-collapse:collapse; font-size:13px; margin:8px 0;}
+  th{background:#eef3f9; color:#12305c; text-align:left; padding:7px 10px; border:1px solid var(--line);}
+  td{padding:7px 10px; border:1px solid var(--line); vertical-align:top;}
+  code,.file{font-family:Consolas,Menlo,monospace; font-size:12px; background:#eef2f7; border-radius:4px; padding:1px 6px; color:#31435c;}
+  .tag{display:inline-block; font-size:11.5px; font-weight:700; border-radius:20px; padding:2px 10px; margin-left:6px; vertical-align:1px;}
+  .tg{background:var(--chip-green); color:var(--green);}
+  .ta{background:var(--chip-amber); color:var(--amber);}
+  .tr{background:var(--chip-red); color:var(--red);}
+  .tb{background:var(--chip-blue); color:var(--blue);}
+  .tt{background:var(--chip-teal); color:var(--teal);}
+  .tp{background:var(--chip-purple); color:var(--purple);}
+  .quote{border-left:4px solid var(--teal); background:#f0f8f6; padding:9px 15px; border-radius:0 8px 8px 0; font-size:13.5px; margin:8px 0;}
+  .chk{list-style:none; font-size:13.5px;}
+  .chk li{padding:4px 0 4px 28px; position:relative; border-bottom:1px dashed var(--line);}
+  .chk li:before{content:"☐"; position:absolute; left:4px; color:var(--blue); font-size:16px;}
+  .sumcard{background:linear-gradient(135deg,#eef3fb,#eef8f5); border:1px solid #c7d9f2; border-radius:12px; padding:14px 20px; font-size:13.5px; margin-top:22px;}
+  .sumcard pre{font-family:inherit; white-space:pre-wrap; margin:0;}
+  .ladder{border-collapse:separate; border-spacing:0 6px; font-size:13px;}
+  .ladder td{border:none; padding:9px 12px; vertical-align:middle;}
+  .ladder tr td:first-child{width:165px; font-weight:800; font-size:14px; border-radius:10px 0 0 10px; text-align:center;}
+  .ladder tr td:last-child{border-radius:0 10px 10px 0;}
+  .z1 td:first-child{background:#e6f4ea; color:var(--green);} .z1 td:last-child{background:#f4fbf6; border:1px solid #d5ecdc; border-left:none;}
+  .z2 td:first-child{background:#f0eaf8; color:var(--purple);} .z2 td:last-child{background:#faf8fd; border:1px solid #ddd2f0; border-left:none;}
+  .z3 td:first-child{background:#e8f0fb; color:var(--blue);}  .z3 td:last-child{background:#f5f9fe; border:1px solid #d4e2f4; border-left:none;}
+  .z4 td:first-child{background:#e2f3f0; color:var(--teal);} .z4 td:last-child{background:#f2faf8; border:1px solid #cfe8e2; border-left:none;}
+  .z5 td:first-child{background:#fdf3e0; color:var(--amber);} .z5 td:last-child{background:#fffbf2; border:1px solid #f0e2c0; border-left:none;}
+  .z6 td:first-child{background:#fbe9e7; color:var(--red);}  .z6 td:last-child{background:#fdf4f3; border:1px solid #f0d3cf; border-left:none;}
+  .z7 td:first-child{background:#3d4a5d; color:#fff;}        .z7 td:last-child{background:#f3f5f8; border:1px solid #dde3ea; border-left:none;}
+  .z7 td:last-child{color:#8a97a8;}
+  footer{color:var(--sub); font-size:12px; text-align:center; margin-top:34px;}
+  @media print{ body{background:#fff;} .wrap{max-width:100%;} section{page-break-inside:avoid;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>HPE 期权权利金全档位面 · 仓库 × 盘面双维度 <span style="font-size:13px;opacity:.85;">2026-09-13 · V3（新文件·不覆盖 V1/V2）</span></h1>
+  <p>回答两个问题：<b>①V1/V2 的数值拉得对不对？</b>——重拉原始块逐档对账（§1，全部对上，还补了之前漏录的 P48/P49）。<b>②为什么只围着 P50？</b>——P50 是 9/10（spot 55.22 时代）注册的锚；现在 spot 62.09，盘面形状变了。V3 把 CSP（P40-P60 九档）和 CC（C60-C80 五档）的<b>实价权利金全档位面</b>拉出来：每档给实价 bid/ask、年化、净接货/有效卖价、<b>feed 自带 delta（市场隐含概率）</b>、OI，再按仓库判据逐档判定——仓库维度定「合不合法」，盘面维度定「划不划算」，最后你拍板。</p>
+  <div class="nowbar">
+    <div>spot <b>62.09</b>（9/11 收·官方锚）</div>
+    <div>快照 <b>9/11 收盘</b>（重拉核验·同源）</div>
+    <div>CSP 过闸档（触发后）<b>P47-P60 八档</b></div>
+    <div>CSP 现价过闸 <b>仅 P55 及以上</b></div>
+    <div>CC 默认 <b>C70 · eff 73.80</b></div>
+    <div>市场隐含接货概率 <b>P50 17% / P55 27%</b>（现价口径·feed delta）</div>
+  </div>
+</header>
+
+<div class="warn"><b>⚠ 口径声明</b>：今天美东周六无新行情，重拉=同一 9/11 收盘快照（与 V1/V2 同源）——「实时权利金」的增量=全档位面 + feed delta（市场隐含概率，替代我手推 BS 概率）。9/16 拉链例行照跑。触发后推算=BS·S=52·IV 62%·r4%·q0.9%，<b>触发当日实价复核为准</b>。勘误#82 口径继承（280121=16.3 月✓✓ 等）。</div>
+
+<div class="risk"><b>一段话总结论</b>：数值全对（§1）；「只围 P50」有历史原因——9/10 注册时 spot 55.22、P55 还是即接档（净成本 52+ 高于机会带），<b>现在 spot 62.09 后 P55 变成 OTM 档：触发后 premium ≈6.4、净接货 48.58 正落 O2 主力带</b>——盘面维度确实支持把档位讨论升级，但改注册档=改参（约束 9/21/48），P50 主例不动，P55 作为 ★档位菜单给你三问拍板。CC 侧 C70 默认档不变，全档位面显示 C60/C65 是激进档（卖在轴门口）、C75/C80 是保守档。买 CALL/买 PUT 维持 🔴（V2 判据继承，不重复展开）。</div>
+
+<section>
+  <h2>① 数值对账 · 重拉核验<span class="en">verification vs V1/V2</span><span class="new">先答「对不对」</span></h2>
+  <div class="card">
+  <p>对 10/16 与 11/20 两个操作到期的原始块做了重拉（fetch_page 同 endpoint），与 V1/V2 所用数字逐档比对：</p>
+  <table>
+    <tr><th>合约</th><th>V1/V2 所用</th><th>本次重拉</th><th>feed theo（对照）</th><th>结论</th></tr>
+    <tr><td>261120 C70（CC）</td><td>3.80/4.10 · OI 4,825</td><td>3.80/4.10 · OI 4,825 · δ+0.390</td><td>3.97</td><td><span class="tag tg">✓ 一致</span></td></tr>
+    <tr><td>261120 P50（CSP 主例）</td><td>1.65/2.00 · OI 5,315</td><td>1.65/2.00 · OI 5,315 · δ−0.171</td><td>1.74</td><td><span class="tag tg">✓ 一致</span></td></tr>
+    <tr><td>261120 P55</td><td>3.15/3.45 · 2,184</td><td>3.15/3.45 · 2,184 · δ−0.274</td><td>3.23</td><td><span class="tag tg">✓ 一致</span></td></tr>
+    <tr><td>261120 P48</td><td>（V1/V2 未录）</td><td><b>1.30/1.59 · OI 273 · δ−0.137（本次补录）</b></td><td>1.31</td><td><span class="tag tb">新入册</span></td></tr>
+    <tr><td>261120 P49</td><td>（未录）</td><td><b>1.43/1.65 · OI 173 · δ−0.153（本次补录）</b></td><td>1.51</td><td><span class="tag tb">新入册</span></td></tr>
+    <tr><td>261016 P50（早窗）</td><td>0.68/0.88 · 2,614</td><td>0.68/0.88 · 2,614 · δ−0.112</td><td>0.71</td><td><span class="tag tg">✓ 一致</span></td></tr>
+    <tr><td>261120 C65 / C75 / C80</td><td>5.40/5.75 · 2.60/2.89 · 1.86/2.04</td><td>同左 · δ+0.495/+0.300/+0.228</td><td>5.59 / 2.81 / 1.98</td><td><span class="tag tg">✓ 一致</span></td></tr>
+  </table>
+  <p style="font-size:12.5px;color:var(--sub);">三方互证：实价 bid/ask ↔ feed theo ↔ 我方 BS（V1/V2 用于触发推算的同一参数组）全部在点差内。V2 触发后推算值（如 P50@9/30=3.66）是<b>情景推算不是实价</b>——页内所有表格已把「现价实价」与「触发推算」分成两列，不再混写。</p>
+  </div>
+</section>
+
+<section>
+  <h2>② CSP 全档位权利金面 · 261120<span class="en">仓库维度=合不合法 · 盘面维度=划不划算</span></h2>
+  <div class="card">
+  <p style="font-size:12.5px;color:var(--sub);">现价列=9/11 实价（年化=bid/K×365/70，保证金=K×100 口径）；触发列=BS 推算（spot≤52、T=51 天、IV 62%）；δ=feed 市场隐含（现价口径）；触发列接货概率≈|δ(触发时)|：P50≈38% / P55≈54% / P60≈69%。深度 ITM 档的「年化」含内在价值会虚高，看净接货列为准。</p>
+  <table>
+    <tr><th>档</th><th>实价 bid/ask</th><th>现价年化</th><th>净接货(bid)</th><th>δ(市场)</th><th>OI</th><th>现价 $2.30 闸</th><th>触发后推算</th><th>触发闸</th><th>仓库×盘面判定</th></tr>
+    <tr><td><b>P60</b></td><td>5.30/5.65</td><td>46.1%</td><td>54.70</td><td>-0.391</td><td>634</td><td>≥2.30 ✓</td><td><b>9.90</b>（净 50.10）</td><td><span class="tag tg">触发✓</span></td><td>现价过 $2.30 闸✓ 但触发后净接货 50.10 落在 O1(52)与 O2(49.5)之间的空档；深度 ITM 年化虚高（含内在价值）→ 盘面不选</td></tr><tr><td><b>P55</b></td><td>3.15/3.45</td><td>29.9%</td><td>51.85</td><td>-0.274</td><td>2,184</td><td>≥2.30 ✓</td><td><b>6.42</b>（净 48.58）</td><td><span class="tag tg">触发✓</span></td><td><b>★档位菜单</b>：触发后净接货 48.58=O2 正中、premium 更厚；接货概率 ~54%（高）；现价已过闸但注册触发=spot≤52，现在开=改参三问</td></tr><tr><td><b>P50</b></td><td>1.65/2.00</td><td>17.2%</td><td>48.35</td><td>-0.171</td><td>5,315</td><td>&lt;2.30</td><td><b>3.66</b>（净 46.34）</td><td><span class="tag tg">触发✓</span></td><td><b>注册主例（⑪L4 原文）</b>：触发后 2.53-4.30 过闸、净接货 46.3 进 O2 下沿；P50 OI 5,315=收租共识磁钉</td></tr><tr><td><b>P49</b></td><td>1.43/1.65</td><td>15.2%</td><td>47.57</td><td>-0.153</td><td>173</td><td>&lt;2.30</td><td><b>3.21</b>（净 45.79）</td><td><span class="tag tg">触发✓</span></td><td>触发后 3.21 过闸、净接货 45.79 近 O3；OI 仅 173 薄</td></tr><tr><td><b>P48</b></td><td>1.30/1.59</td><td>14.1%</td><td>46.70</td><td>-0.137</td><td>273</td><td>&lt;2.30</td><td><b>2.80</b>（净 45.20）</td><td><span class="tag tg">触发✓</span></td><td>触发后 2.80 过闸、净接货 45.20=O3；<b>约束 30 在册「P48 出局」→ 启用=改参三问</b>（约束 48）</td></tr><tr><td><b>P47</b></td><td>1.01/1.39</td><td>11.2%</td><td>45.99</td><td>-0.121</td><td>1,523</td><td>&lt;2.30</td><td><b>2.41</b>（净 44.59）</td><td><span class="tag tg">触发✓</span></td><td>触发后 2.41 压线过闸、净接货 44.59 ∈O3；OI 1,523</td></tr><tr><td><b>P45</b></td><td>0.79/0.91</td><td>9.2%</td><td>44.21</td><td>-0.093</td><td>648</td><td>&lt;2.30</td><td><b>1.75</b>（净 43.25）</td><td><span class="tag tr">触发✗</span></td><td>触发后推算仅 1.75 ✗ → 需 spot≤48 才过闸（更深触发档，窗内大概率来不及）</td></tr><tr><td><b>P42</b></td><td>0.45/0.59</td><td>5.6%</td><td>41.55</td><td>-0.061</td><td>721</td><td>&lt;2.30</td><td><b>1.00</b>（净 41.00）</td><td><span class="tag tr">触发✗</span></td><td>触发后 ~1.00 ✗；旧计划深档 ≤41 已按约束 31 移出</td></tr><tr><td><b>P40</b></td><td>0.25/0.40</td><td>3.3%</td><td>39.75</td><td>-0.044</td><td>1,892</td><td>&lt;2.30</td><td><b>0.65</b>（净 39.35）</td><td><span class="tag tr">触发✗</span></td><td>触发后 ~0.65 ✗；尾部研究锚（44=11%/42=6%）非 CSP 档</td></tr>
+  </table>
+  <div class="quote"><b>为什么注册锚是 P50（历史口径）</b>：9/9-9/10 注册 ⑪L4 时 spot=55.22——当时 P55 是<b>即接档</b>（接货 55、净成本 52+ 高于 O1 52.0，premium 还薄），P50 是唯一「接货落机会区+推算能过 $2.30」的档。<b>现在 spot 62.09，P55 已变 OTM 档</b>：触发后净接货 48.58 落 O2 正中、收 6.42——盘面形状变了，档位菜单随之升级，但<b>改档=改参，P50 注册主例不动（约束 9 判据不随行情松动），P48/P55 都走三问你拍板（约束 21/48）</b>。</div>
+  <table>
+    <tr><th>10/16 早窗全档（T=28 天推算）</th><th>实价 bid/ask</th><th>δ</th><th>OI</th><th>触发后推算</th><th>触发闸</th></tr>
+    <tr><td><b>P45</b></td><td>0.22/0.31</td><td>-0.044</td><td>1,458</td><td><b>0.90</b>（净 44.10）</td><td><span class="tag tr">✗</span></td></tr><tr><td><b>P50</b></td><td>0.68/0.88</td><td>-0.112</td><td>2,614</td><td><b>2.53</b>（净 47.47）</td><td><span class="tag tg">✓</span></td></tr><tr><td><b>P55</b></td><td>1.73/1.85</td><td>-0.231</td><td>536</td><td><b>5.26</b>（净 49.74）</td><td><span class="tag tg">✓</span></td></tr><tr><td><b>P60</b></td><td>3.55/3.75</td><td>-0.390</td><td>538</td><td><b>8.96</b>（净 51.04）</td><td><span class="tag tg">✓</span></td></tr>
+  </table>
+  <p style="font-size:12.5px;color:var(--sub);">10/16 面与 11/20 同构：触发后 P50/P55/P60 过闸、P45 ✗（需 spot≤48）。早窗只有 immediate 错杀（≤9/22）才轮得到，之后自动切 11/20 主窗。</p>
+  </div>
+</section>
+
+<section>
+  <h2>③ CC 全档位权利金面 · 261120<span class="en">收租 × 叫走距离的换挡表</span></h2>
+  <div class="card">
+  <p style="font-size:12.5px;color:var(--sub);">底仓=100 股 @62.09（成本 −23.99 负成本，负成本语义见 #71：卖出即全程账本兑现）；有效卖价=K+premium(bid 保守口径)；δ=市场隐含被叫走概率（现价口径）。CC=卖出语义 → 约束 3 分层：全表=软建议，逐档你拍板。</p>
+  <table>
+    <tr><th>档</th><th>实价 bid/ask</th><th>收租/底仓</th><th>有效卖价</th><th>δ(叫走概率)</th><th>OI</th><th>判定</th></tr>
+    <tr><td><b>C60</b></td><td>7.65/8.00</td><td>12.3% / 70 天（年化≈64%）</td><td><b>67.65</b>（+9.0%）</td><td>0.611</td><td>4,094</td><td>收租最肥（年化≈45%）但有效卖价 67.65 只比趋势轴 64.3 高 5%——把翻转④右尾卖在门口，delta 0.61=市场定价 61% 被叫走 → 激进档·慎</td></tr><tr><td><b>C65</b></td><td>5.40/5.75</td><td>8.7% / 70 天（年化≈45%）</td><td><b>70.40</b>（+13.4%）</td><td>0.495</td><td>1,785</td><td>年化≈45%→有效卖价 70.40；叫走概率 ~50% 对半开；比 C60 多留 2.75 空间 → 激进偏中性</td></tr><tr><td><b>C70</b></td><td>3.80/4.10</td><td>6.1% / 70 天（年化≈32%）</td><td><b>73.80</b>（+18.9%）</td><td>0.390</td><td>4,825</td><td><b>默认档（V2 典型③承袭）</b>：eff 73.80=+18.9%、年化≈32%、叫走概率 ~39%、磁钉带正上方、不穿财报</td></tr><tr><td><b>C75</b></td><td>2.60/2.89</td><td>4.2% / 70 天（年化≈22%）</td><td><b>77.60</b>（+25.0%）</td><td>0.300</td><td>620</td><td>保守档：eff 77.60=+25.0%、年化≈22%、叫走概率 ~30%——留更多右尾、收租减半</td></tr><tr><td><b>C80</b></td><td>1.86/2.04</td><td>3.0% / 70 天（年化≈16%）</td><td><b>81.86</b>（+31.8%）</td><td>0.228</td><td>290</td><td>最保守：eff 81.86=+31.8%、年化≈16%——近乎「不卖」的备兑，收租垫底</td></tr>
+  </table>
+  <p style="font-size:12.5px;color:var(--sub);">盘面读法：磁钉锚=12/18 C70 15,961（全链最大 OI=市场共识天花板）+ 11/20 C70 4,825 双到期同价位 → C70 是市场自己在交易的档。档位选择的本质=「收租 × 叫走距离」换挡：C60/C65 激进（卖在趋势轴 64.3 门口）、C70 默认（轴上方+磁钉正上方+不穿财报）、C75/C80 保守（留右尾收租减半）。卖出挂单三问（#75）前置不变；CC 窗=现在→11/25 关窗。</p>
+  </div>
+</section>
+
+<section>
+  <h2>④ 双维度判定矩阵<span class="en">repo dimension × market dimension</span></h2>
+  <div class="card">
+  <table>
+    <tr><th>候选</th><th>仓库维度（判据链）</th><th>盘面维度（权利金面）</th><th>合成判定</th></tr>
+    <tr><td><b>CSP P50</b>（注册主例）</td><td>⑪L4 原文档 + 约束 30/31 全过 + 净接货进 O2 下沿</td><td>触发后 2.53-4.30 · δ 隐含接货 ~38% · OI 5,315 磁钉</td><td><span class="tag tg">🟢 触发制·注册内直接做</span></td></tr>
+    <tr><td><b>CSP P55</b>（★菜单）</td><td>窗口/到期合规同 P50；净接货 48.58 ∈O2 合法；<b>改注册档=改参三问</b></td><td>触发后 6.42（厚一倍）· 净 48.58=O2 正中 · 接货概率 ~54% · OI 2,184 厚</td><td><span class="tag ta">🟡 三问后可选·你拍板</span></td></tr>
+    <tr><td>CSP P48 / P47</td><td><b>约束 30 在册「P48 出局」</b>→ 启用=改参；净接货落 O3</td><td>触发后 2.80/2.41 过闸 · 接货概率 ~32%/35%</td><td><span class="tag ta">🟡 改参三问</span></td></tr>
+    <tr><td>CSP P60（含现价开单）</td><td>现价开=违反 ⑪L4 spot≤52 触发前置（约束 9）</td><td>净接货 50.10 落 O1/O2 空档 · 深度 ITM 年化虚高</td><td><span class="tag tr">🔴 注册内否决</span></td></tr>
+    <tr><td>CSP P45 及以下</td><td>深档 ≤41 已移出（约束 31）</td><td>触发后 &lt;2.30 ✗（P45 需 spot≤48）</td><td><span class="tag tr">🔴 双维不过</span></td></tr>
+    <tr><td><b>CC C70</b>（默认档）</td><td>卖出分层=软建议·你拍板 + #75 三问前置 + 不穿财报窗</td><td>eff 73.80=+18.9% · 年化≈32% · δ 0.39 · 磁钉正上方</td><td><span class="tag ta">🟡 合格·你拍板</span></td></tr>
+    <tr><td>CC C60/C65（激进）</td><td>同上合规，但把翻转④右尾卖在轴门口</td><td>年化≈45-64% · δ 0.50-0.61（被叫走概率过半）</td><td><span class="tag ta">🟡 合法·激进档·慎</span></td></tr>
+    <tr><td>CC C75/C80（保守）</td><td>同上合规</td><td>年化≈16-22% · δ 0.23-0.30</td><td><span class="tag tb">🔵 合法·保守档</span></td></tr>
+    <tr><td>买 CALL / 买 PUT</td><td>V2 判据继承：G1D+G2P91+G3 三红 + H4 BE 数学；PUT=反论点+伪保险</td><td>280121 全谱 BE 54.4-63.3≫46.9；P55 保险年化≈29% vs T1-T5 免费</td><td><span class="tag tr">🔴 完全不值得（不重复展开）</span></td></tr>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>⑤ 52 周逐周阶梯<span class="en">week-by-week ladder · 承袭 V1（同一快照）</span></h2>
+  <div class="card" style="padding:12px 16px;">
+  <p style="font-size:12.5px;color:var(--sub);">与 V1/V2 完全同源（同一 9/11 快照 15 到期全枚举；周期权只挂 7 周远，灰周=未挂牌如实标）。四玩法用到期地图：CSP→琥珀两行（10/16·11/20）；CC→11/20 最顺；买 CALL→280121（仍被 H4 否决）；买 PUT→无合格档。</p>
+  <table class="ladder">
+    <tr class="z3"><td>W1 · 09-18</td><td><b>260918</b><br><span style="font-size:11.5px;color:var(--sub);">月权 ｜ 7天/0.2月 ｜ IV 60-63%</span></td><td>C60 3.15/3.30 · OI 11,412（C55 11,947 / C65 7,644 / C70 6,763 万张磁钉带）<br><span style="font-size:11.5px;color:var(--sub);">9/17 除息 $0.1425 已含；P50 0.03/0.05</span></td></tr><tr class="z4"><td>W2 · 09-25</td><td><b>260925</b><br><span style="font-size:11.5px;color:var(--sub);">周权 ｜ 14天/0.5月 ｜ IV 60-62%</span></td><td>C60 3.90/4.10 · 1,422（C67 1.10/1.34 · 1,320）<br><span style="font-size:11.5px;color:var(--sub);">盒 9/25 到期（9-11 卖 58.88 负成本单 10 日盒）</span></td></tr><tr class="z4"><td>W3 · 10-02</td><td><b>261002</b><br><span style="font-size:11.5px;color:var(--sub);">周权 ｜ 21天/0.7月 ｜ IV 61-65%</span></td><td>C61 4.20/4.55 · 1,447（vol 1,234；C70 1.19/1.35 · 1,330）<br><span style="font-size:11.5px;color:var(--sub);">C64 vol 1,302 短线活跃</span></td></tr><tr class="z4"><td>W4 · 10-09</td><td><b>261009</b><br><span style="font-size:11.5px;color:var(--sub);">周权 ｜ 28天/0.9月 ｜ IV 59-62%</span></td><td>C65 2.74/3.35 · 1,199（C62 3.95/4.45 vol 845）<br><span style="font-size:11.5px;color:var(--sub);">点差开始变宽</span></td></tr><tr class="z5"><td>W5 · 10-16</td><td><b>261016</b><br><span style="font-size:11.5px;color:var(--sub);">月权 ｜ 35天/1.1月 ｜ IV 61-64%</span></td><td>C60 5.65/5.90 · 6,328（C55 7,579 / C65 4,021 / C70 4,009）<br><span style="font-size:11.5px;color:var(--sub);">★CSP 合规到期①（早窗）：触发 spot≤52 且 ≤9/22 前后，P50 推算 ≥$2.30</span></td></tr><tr class="z4"><td>W6 · 10-23</td><td><b>261023</b><br><span style="font-size:11.5px;color:var(--sub);">周权 ｜ 42天/1.4月 ｜ IV 60-63%</span></td><td>C65 3.40/4.25（vol 402；OI 薄新挂）<br><span style="font-size:11.5px;color:var(--sub);">薄，仅参考</span></td></tr><tr class="z6"><td>W7 · 10-30</td><td><b>261030</b><br><span style="font-size:11.5px;color:var(--sub);">周权(最后) ｜ 49天/1.6月 ｜ IV 61-63%</span></td><td>C60 5.90/7.00 · OI 10（≈0 新挂）<br><span style="font-size:11.5px;color:var(--sub);">点差普遍 >1.0 不采信；周期权只挂 7 周远，此后周权断档</span></td></tr><tr class="z7"><td>W8 · 11-06</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W9 · 11-13</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z5"><td>W10 · 11-20</td><td><b>261120</b><br><span style="font-size:11.5px;color:var(--sub);">月权 ｜ 70天/2.3月 ｜ IV 61-63%</span></td><td>C60 7.65/8.00 · 4,094（C70 4,825 / P50 1.65/2.00 · 5,315）<br><span style="font-size:11.5px;color:var(--sub);">★CSP 合规到期②=主窗：现价 P50 1.65/2.00 出局；触发后推算 2.53-4.30 全段过闸；11/25 关窗前最后月权</span></td></tr><tr class="z7"><td>W11 · 11-27</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）；11/25 关窗（财报窗 ±7 起）</span></td></tr><tr class="z7"><td>W12 · 12-04</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）；12/2 重规划日（翻转④+12/2 议程）</span></td></tr><tr class="z7"><td>W13 · 12-11</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z3"><td>W14 · 12-18</td><td><b>261218</b><br><span style="font-size:11.5px;color:var(--sub);">月权 ｜ 96天/3.2月 ｜ IV 66-67%</span></td><td>C70 5.55/5.85 · 15,961=全链最大（C55 8,130 / C60 7,465）<br><span style="font-size:11.5px;color:var(--sub);">财报溢价 IV +4~4.5pp（#57 实价落地）；12/2 重规划时仅剩 16 天</span></td></tr><tr class="z7"><td>W15 · 12-25</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W16 · 01-01</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W17 · 01-08</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z3"><td>W18 · 01-15</td><td><b>270115</b><br><span style="font-size:11.5px;color:var(--sub);">月权 ｜ 126天/4.1月 ｜ IV 63-65%</span></td><td>C60 10.30/10.75 · 11,009（C35 10,276 / P46 6,764 / P47 5,293）<br><span style="font-size:11.5px;color:var(--sub);">4.1 月 ✗G5（勘误#81 对此合约成立；原「16.4 月」=280121 期限误记）</span></td></tr><tr class="z7"><td>W19 · 01-22</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W20 · 01-29</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W21 · 02-05</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W22 · 02-12</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z3"><td>W23 · 02-19</td><td><b>270219</b><br><span style="font-size:11.5px;color:var(--sub);">月权 ｜ 161天/5.3月 ｜ IV 62-63%</span></td><td>C60 11.00/11.70 · 313（P49 3.60/4.05 · 2,499 / P60 8.30/9.05 · 1,304）<br><span style="font-size:11.5px;color:var(--sub);">5.3 月 ✗G5；点差宽、薄</span></td></tr><tr class="z7"><td>W24 · 02-26</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W25 · 03-05</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W26 · 03-12</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z3"><td>W27 · 03-19</td><td><b>270319</b><br><span style="font-size:11.5px;color:var(--sub);">月权 ｜ 189天/6.2月 ｜ IV 63-65%</span></td><td>C60 11.85/13.00 · 3,238（P50 4.65/4.85 · 3,708 / P45 3.00/3.45 · 4,027）<br><span style="font-size:11.5px;color:var(--sub);">6.2 月 ✗G5 · #82 新发现；P22/P27 深档万张 OI=旧仓遗迹</span></td></tr><tr class="z7"><td>W28 · 03-26</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W29 · 04-02</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W30 · 04-09</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W31 · 04-16</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W32 · 04-23</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W33 · 04-30</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W34 · 05-07</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W35 · 05-14</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W36 · 05-21</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W37 · 05-28</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W38 · 06-04</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W39 · 06-11</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z3"><td>W40 · 06-18</td><td><b>270617</b><br><span style="font-size:11.5px;color:var(--sub);">月权(符号=周四6/17) ｜ 279天/9.2月 ｜ IV 63-66%</span></td><td>C70 11.00/12.00 · 1,250（P55 8.25/10.20 · 3,345 / P45 4.50/5.40 · 2,391）<br><span style="font-size:11.5px;color:var(--sub);">9.2 月 ✗G5 · #82 新发现；52 周视野内最长档</span></td></tr><tr class="z7"><td>W41 · 06-25</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W42 · 07-02</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W43 · 07-09</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W44 · 07-16</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W45 · 07-23</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W46 · 07-30</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W47 · 08-06</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W48 · 08-13</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W49 · 08-20</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W50 · 08-27</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W51 · 09-03</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z7"><td>W52 · 09-10</td><td><b>—</b><br><span style="font-size:11.5px;color:var(--sub);">未挂牌 ｜ — ｜ IV —</span></td><td>—<br><span style="font-size:11.5px;color:var(--sub);">未挂牌（周期权仅挂 7 周远；6 个月外仅 3/6/9/12 月季度链 + 1 月 LEAPS）</span></td></tr><tr class="z1"><td>视野外 · 09-17</td><td><b>270917</b><br><span style="font-size:11.5px;color:var(--sub);">月权(第53周) ｜ 371天/12.2月 ｜ IV 63-66%</span></td><td>C60 16.10/18.40 · 104（P50 7.70/9.15 · 334）<br><span style="font-size:11.5px;color:var(--sub);">12.2 月 ≥12 ✓ 压线合格（#82 新发现）；点差 1.5-2.7、OI 百张级 → 备选</span></td></tr><tr class="z1"><td>视野外 · 01-21</td><td><b>280121</b><br><span style="font-size:11.5px;color:var(--sub);">LEAPS ｜ 497天/16.3月 ｜ IV 64-66%</span></td><td>C60 18.75/20.95 · 2,737（C90 6,550 / C50 5,269 / P50 8.55/10.30 · 3,849）<br><span style="font-size:11.5px;color:var(--sub);">16.3 月 ✓✓ 合格主力（#82 新发现）；#80 原始「16.4 个月」即此合约（误记至 270115）</span></td></tr>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>⑥ 回报率图示分析（PDF 式）<span class="en">只画值得买的典型 · 完全不值得的不展开</span></h2>
+
+  <div class="quote"><b>入选标准</b>：① 注册内或三问菜单内；② 触发/成交条件下数字过闸（$2.30 闸 / 有效卖价档）；③ 最坏情景落计划内。V3 图示=<b>CSP P50（注册主例）+ CSP P55（★菜单新典型）+ CC C70（默认档）</b>；P60/P45 及以下、买 CALL/买 PUT 不入选（判据见 §2-§4，不给图）。</div>
+
+  <div class="card">
+    <h3 style="font-size:15.5px;color:#12305c;margin-bottom:4px;">典型 A · CSP 261120 P50（注册主例·承袭 V1/V2）<span class="tag tg">触发制</span></h3>
+    <p>触发 spot≤52 当日拉链实价 ≥$2.30 → 卖 P50（1 张=$5,000 保证金口径）。触发时点表（BS 推算）：9/14=4.30 / 9/30=3.66 / 10/9=3.26 / 10/16=2.91 / 10/23=2.53（切点≈10/26）。假设 9/30 触发（prem 3.66·收 366·净接货 46.34·接货概率 ≈38%）：</p>
+    <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12.5px;"><div style="width:170px;text-align:right;color:var(--sub);">到期 58（牛）</div><div style="width:330px;"><div style="height:15px;width:36.5%;background:#1c7a3d;border-radius:3px;color:#fff;font-size:11px;padding-left:6px;line-height:15px;white-space:nowrap;">+7.3%</div></div><div style="font-size:11.5px;color:var(--sub);">对照=正股 52 买入；正股 &gt;55.66 反超</div></div><div style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12.5px;"><div style="width:170px;"></div><div style="width:330px;"><div style="height:11px;width:57.49999999999999%;background:#9fb3c8;border-radius:3px;color:#41506a;font-size:10px;padding-left:6px;line-height:11px;white-space:nowrap;">对照 +11.5%</div></div></div>
+    <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12.5px;"><div style="width:170px;text-align:right;color:var(--sub);">到期 52（横）</div><div style="width:330px;"><div style="height:15px;width:36.5%;background:#1c7a3d;border-radius:3px;color:#fff;font-size:11px;padding-left:6px;line-height:15px;white-space:nowrap;">+7.3%</div></div><div style="font-size:11.5px;color:var(--sub);">CSP 赢横盘</div></div><div style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12.5px;"><div style="width:170px;"></div><div style="width:330px;"><div style="height:11px;width:1.5%;background:#9fb3c8;border-radius:3px;color:#41506a;font-size:10px;padding-left:6px;line-height:11px;white-space:nowrap;">对照 +0.0%</div></div></div>
+    <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12.5px;"><div style="width:170px;text-align:right;color:var(--sub);">到期 46（熊·被行权）</div><div style="width:330px;"><div style="height:15px;width:3.4999999999999996%;background:#b3362c;border-radius:3px;color:#fff;font-size:11px;padding-left:6px;line-height:15px;white-space:nowrap;">-0.7%</div></div><div style="font-size:11.5px;color:var(--sub);">净接货 46.34 ∈O2 下沿=计划内接货</div></div><div style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12.5px;"><div style="width:170px;"></div><div style="width:330px;"><div style="height:11px;width:57.49999999999999%;background:#d0928c;border-radius:3px;color:#41506a;font-size:10px;padding-left:6px;line-height:11px;white-space:nowrap;">对照 -11.5%</div></div></div>
+    <p><b>对错判据</b>：对=到期 ≥50 收租，或被行权净接货 ∈带内论点未破；破坏=收盘 &lt;44.5 硬提醒重评估（约束 3/12）。</p>
+  </div>
+
+  <div class="card">
+    <h3 style="font-size:15.5px;color:#12305c;margin-bottom:4px;">典型 B · CSP 261120 P55（★档位菜单·三问拍板后）<span class="tag ta">触发制 · 改参候选</span></h3>
+    <p>同一触发（spot≤52）改卖 P55：推算 premium ≈<b>6.42</b>（含内在 3 + 时间价值 ≈3.4）、收 ≈642/张、<b>净接货 48.58=O2 正中</b>、接货概率 ≈54%（P50 约 38%——<b>用接货概率换接货价位，这是两档的本质取舍</b>）。三情景（对照=52 买正股）：</p>
+    <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12.5px;"><div style="width:170px;text-align:right;color:var(--sub);">到期 58（牛·未接货）</div><div style="width:330px;"><div style="height:15px;width:58.35659848446172%;background:#1c7a3d;border-radius:3px;color:#fff;font-size:11px;padding-left:6px;line-height:15px;white-space:nowrap;">+11.7%</div></div><div style="font-size:11.5px;color:var(--sub);">收 642；正股反超点 58.42</div></div><div style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12.5px;"><div style="width:170px;"></div><div style="width:330px;"><div style="height:11px;width:57.692307692307686%;background:#9fb3c8;border-radius:3px;color:#41506a;font-size:10px;padding-left:6px;line-height:11px;white-space:nowrap;">对照 +11.5%</div></div></div>
+    <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12.5px;"><div style="width:170px;text-align:right;color:var(--sub);">到期 52（接货）</div><div style="width:330px;"><div style="height:15px;width:31.083871211734444%;background:#1c7a3d;border-radius:3px;color:#fff;font-size:11px;padding-left:6px;line-height:15px;white-space:nowrap;">+6.2%</div></div><div style="font-size:11.5px;color:var(--sub);">被行权净接 48.58，比 52 现买省 3.42+收租</div></div><div style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12.5px;"><div style="width:170px;"></div><div style="width:330px;"><div style="height:11px;width:1.5%;background:#9fb3c8;border-radius:3px;color:#41506a;font-size:10px;padding-left:6px;line-height:11px;white-space:nowrap;">对照 +0.0%</div></div></div>
+    <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12.5px;"><div style="width:170px;text-align:right;color:var(--sub);">到期 46（熊·被行权）</div><div style="width:330px;"><div style="height:15px;width:23.461583333720103%;background:#b3362c;border-radius:3px;color:#fff;font-size:11px;padding-left:6px;line-height:15px;white-space:nowrap;">-4.7%</div></div><div style="font-size:11.5px;color:var(--sub);">同情景 P50 仅 −0.7%：高接档深熊垫更厚（成本 48.58 vs 46.34）·破坏判据同为 44.5</div></div><div style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12.5px;"><div style="width:170px;"></div><div style="width:330px;"><div style="height:11px;width:57.692307692307686%;background:#d0928c;border-radius:3px;color:#41506a;font-size:10px;padding-left:6px;line-height:11px;white-space:nowrap;">对照 -11.5%</div></div></div>
+    <p><b>三问</b>（约束 48 改参三问）：①改档理由=spot 62 后 P55 形态质变（盘面新证据）？②与 P50 差异=接货 48.58 vs 46.34、概率 54% vs 38%、收 642 vs 366？③破坏判据不变=44.5？——三问全过=直接采纳（你拍板）。<b>未拍板前 P50 仍是注册主例。</b></p>
+  </div>
+
+  <div class="card">
+    <h3 style="font-size:15.5px;color:#12305c;margin-bottom:4px;">典型 C · CC 261120 C70（默认档·承袭 V2）<span class="tag ta">合格 · 软建议层 · 你拍板</span></h3>
+    <p>卖 C70 @3.80（bid）=预注册卖单：有效卖价 <b>73.80（+18.9%）</b>、收 380=底仓 6.1%/70 天（年化≈32%）、市场隐含被叫走概率 ≈39%（feed δ）。全档位换挡见 §3（C60 年化≈45-64% 但卖在轴门口；C75/C80 保守）。到期三情景（对照=底仓不动）：</p>
+    <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12.5px;"><div style="width:170px;text-align:right;color:var(--sub);">到期 72（被叫走）</div><div style="width:330px;"><div style="height:15px;width:94.5%;background:#1c7a3d;border-radius:3px;color:#fff;font-size:11px;padding-left:6px;line-height:15px;white-space:nowrap;">+18.9%</div></div><div style="font-size:11.5px;color:var(--sub);">有效卖价 73.80；差额=收租</div></div><div style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12.5px;"><div style="width:170px;"></div><div style="width:330px;"><div style="height:11px;width:80.0%;background:#9fb3c8;border-radius:3px;color:#41506a;font-size:10px;padding-left:6px;line-height:11px;white-space:nowrap;">对照 +16.0%</div></div></div>
+    <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12.5px;"><div style="width:170px;text-align:right;color:var(--sub);">到期 62.09（平）</div><div style="width:330px;"><div style="height:15px;width:30.5%;background:#1c7a3d;border-radius:3px;color:#fff;font-size:11px;padding-left:6px;line-height:15px;white-space:nowrap;">+6.1%</div></div><div style="font-size:11.5px;color:var(--sub);">白收 380；底仓还在</div></div><div style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12.5px;"><div style="width:170px;"></div><div style="width:330px;"><div style="height:11px;width:1.5%;background:#9fb3c8;border-radius:3px;color:#41506a;font-size:10px;padding-left:6px;line-height:11px;white-space:nowrap;">对照 +0.0%</div></div></div>
+    <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12.5px;"><div style="width:170px;text-align:right;color:var(--sub);">到期 55（跌）</div><div style="width:330px;"><div style="height:15px;width:26.5%;background:#b3362c;border-radius:3px;color:#fff;font-size:11px;padding-left:6px;line-height:15px;white-space:nowrap;">-5.3%</div></div><div style="font-size:11.5px;color:var(--sub);">收租垫 6.1pp</div></div><div style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12.5px;"><div style="width:170px;"></div><div style="width:330px;"><div style="height:11px;width:57.00000000000001%;background:#d0928c;border-radius:3px;color:#41506a;font-size:10px;padding-left:6px;line-height:11px;white-space:nowrap;">对照 -11.4%</div></div></div>
+    <p><b>三问前置</b>：批次=底仓批 / 接回腿先想好 / C70=+12.7% 超触价概率表实测档（+5%）不外推编数（约束 10/47）。对=到期 &lt;70 收租 380 或被叫走 @73.80；错=右尾 &gt;73.80 被卖且无接回腿（跳三问才判流程失误）。</p>
+  </div>
+</section>
+
+<section>
+  <h2>⑦ 诚实清单<span class="en">what this page does NOT know</span></h2>
+  <div class="card">
+  <ul class="chk">
+    <li>重拉=同一 9/11 收盘快照（美东周六无新行情）；「实时」增量=全档位面+feed delta。9/16 拉链例行照跑，届时双快照增量对账。</li>
+    <li>触发后推算全部=BS 固定 IV 62%；接货概率（38%/54%/69%）=同参数 BS delta，<b>不是实测频率</b>；现价口径的市场隐含概率（17%/27%）=feed delta 原样。</li>
+    <li>P55 典型 B=改参候选，<b>未拍板前不进注册</b>；P48 同理受约束 30「出局」在册条款约束。改参三问落 log 才生效（约束 48）。</li>
+    <li>CC 全表按 bid 保守计；实际成交在 3.80/4.10 点差内浮动。CC 窗=现在→11/25 关窗；11/25 后不开新单，12/2 重规划再授权。</li>
+    <li>深度 ITM 档（P55 触发后/P60）的「年化」含内在价值虚高，只作参考，决策看净接货与接货概率。</li>
+    <li>10-Q 三席未开庭、翻转④重规划、T1/T2 在场待确认、接回腿待口述——全部在册有主；本页不新增判词（baseline diff=none），P55/P48 菜单=参数层呈现非注册变更。</li>
+  </ul>
+  </div>
+</section>
+
+<div class="sumcard"><pre>┌─ V3 一屏结论 ──────────────────────────────────────────────────────────
+│ ① 数值对账：V1/V2 全部对上（重拉 10/16+11/20 原始块逐档核对）；
+│    补录 P48 1.30/1.59·273、P49 1.43/1.65·173（此前漏录）
+│ ② 「只围 P50」的答案：P50=9/10 spot 55 时代的注册锚；现在 spot 62.09
+│    后 P55 变 OTM 档——触发后收 6.42（厚一倍）·净接货 48.58=O2 正中
+│    → ★档位菜单：P50 主例不动，P55/P48 走改参三问你拍板（约束9/21/48）
+│ ③ CSP 触发面：P47-P60 八档过 $2.30 闸；P60 净接货 50.10 落空档+现价开
+│    违反触发前置 → 否决；P45 及以下触发后仍不过 → 否决
+│ ④ CC 换挡表：C60≈64%/C65≈45%（激进·卖在轴门口）/C70≈32%（默认·
+│    eff 73.80·δ39%）/C75≈22%/C80≈16%（保守）——全档你拍板
+│ ⑤ 图示三典型：P50（注册）+P55（★菜单）+C70（CC 默认）；
+│    P60/P45/买CALL/买PUT 不入选只存判据
+│ ⑥ 市场隐含概率（feed δ·现价口径）：P50 17% / P55 27% / C70 叫走 39%
+└── 数据=9/11 收盘（重拉核验同源）·触发当日拉真链·9/16 拉链例行照跑</pre></div>
+
+<footer>
+  HPE 权利金全档位面 · 仓库×盘面双维度 · 2026-09-13 V3 · #84 · 上游：data/HPE/HPE_options_chain_52w_20260913.md（#82+#84 对账段）｜ 前版：V1（未覆盖）·V2（未覆盖）·玩法母版（未覆盖）｜ 判据源：journal/decision_log.md #79-#84 ｜ 本页=参考架非报价，触发/下单当日拉真链
+</footer>
+
+</div>
+</body>
+</html>

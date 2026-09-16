@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HPE 玩法提纯与传承总卷（Heritage Edition）</title>
+<style>
+  :root{
+    --ink:#1a2332; --sub:#5a6a7e; --line:#e3e8ef; --bg:#f7f9fb; --card:#ffffff;
+    --blue:#1e5aa8; --teal:#0e7c6b; --amber:#b26a00; --red:#b3362c; --purple:#6b4fa0;
+    --chip-green:#e6f4ea; --chip-amber:#fdf3e0; --chip-red:#fbe9e7; --chip-blue:#e8f0fb; --chip-purple:#f0eaf8;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+       color:var(--ink); background:var(--bg); line-height:1.65; font-size:15px;}
+  .wrap{max-width:1080px; margin:0 auto; padding:28px 20px 80px;}
+  header.hero{background:linear-gradient(135deg,#3d2a6e 0%,#6b4fa0 55%,#1e5aa8 130%);
+    color:#fff; border-radius:14px; padding:34px 34px 28px; margin-bottom:26px;}
+  header.hero h1{font-size:26px; margin-bottom:8px; letter-spacing:.5px;}
+  header.hero p{opacity:.92; font-size:14px; max-width:860px;}
+  header.hero .meta{margin-top:14px; font-size:12.5px; opacity:.8;}
+  nav.toc{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:16px 22px; margin-bottom:26px; display:flex; flex-wrap:wrap; gap:8px 18px;}
+  nav.toc a{color:var(--purple); text-decoration:none; font-size:13.5px; font-weight:600;}
+  nav.toc a:hover{text-decoration:underline;}
+  .duo{background:var(--chip-purple); border:1px solid #d8cbf0; border-radius:10px;
+    padding:12px 18px; margin-bottom:26px; font-size:13.5px;}
+  section{margin-bottom:36px;}
+  h2{font-size:20px; padding:10px 0 8px; border-bottom:2px solid var(--purple);
+     margin-bottom:16px; color:#3d2a6e;}
+  h2 .en{font-size:12px; color:var(--sub); font-weight:normal; margin-left:8px;}
+  h3{font-size:16px; margin:18px 0 8px; color:#3d2a6e;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:18px 22px; margin-bottom:14px;}
+  .card h4{font-size:15.5px; margin-bottom:6px;}
+  .card .one{color:var(--sub); font-size:13.5px; margin-bottom:8px;}
+  .card p{font-size:13.5px; margin:4px 0;}
+  .card .lbl{color:var(--purple); font-weight:700;}
+  .tag{display:inline-block; font-size:11.5px; font-weight:700; border-radius:20px;
+    padding:2px 10px; margin-left:8px; vertical-align:1px;}
+  .tg{background:var(--chip-green); color:#1c7a3d;}
+  .ta{background:var(--chip-amber); color:var(--amber);}
+  .tr{background:var(--chip-red); color:var(--red);}
+  .tb{background:var(--chip-blue); color:var(--blue);}
+  .tp{background:var(--chip-purple); color:var(--purple);}
+  table{width:100%; border-collapse:collapse; font-size:13px; margin:10px 0;}
+  th{background:#f2eef9; color:#3d2a6e; text-align:left; padding:7px 10px; border:1px solid var(--line);}
+  td{padding:6px 10px; border:1px solid var(--line); vertical-align:top;}
+  tr:nth-child(even) td{background:#fcfbfe;}
+  code,.file{font-family:Consolas,Menlo,monospace; font-size:12px; background:#eef2f7;
+    border-radius:4px; padding:1px 6px; color:#31435c;}
+  .quote{border-left:4px solid var(--teal); background:#f0f8f6; padding:10px 16px;
+    border-radius:0 8px 8px 0; font-size:13.5px; margin:10px 0;}
+  .law{border-left:4px solid var(--purple); background:#f7f4fc; padding:10px 16px;
+    border-radius:0 8px 8px 0; font-size:13.5px; margin:10px 0;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr;}}
+  .tree{font-family:Consolas,Menlo,monospace; font-size:12.5px; background:#faf9fd;
+    border:1px dashed #c9bce6; border-radius:10px; padding:16px 20px; line-height:1.9; overflow-x:auto;}
+  .tree b{color:var(--purple);}
+  footer{color:var(--sub); font-size:12px; text-align:center; margin-top:40px;}
+  .kpi{display:flex; flex-wrap:wrap; gap:12px; margin:12px 0;}
+  .kpi div{background:#f4f1fa; border:1px solid var(--line); border-radius:10px;
+    padding:8px 16px; font-size:12.5px;}
+  .kpi b{display:block; font-size:16px; color:var(--purple);}
+  .sumcard{background:linear-gradient(135deg,#f4f1fa,#eef3fb); border:1px solid #d8cbf0;
+    border-radius:12px; padding:16px 22px; font-size:13.5px; margin-top:26px;}
+  .sumcard pre{font-family:inherit; white-space:pre-wrap; margin:0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>HPE 玩法提纯与传承总卷 <span style="font-size:14px;font-weight:normal;opacity:.85;">Heritage Edition · v1.0</span></h1>
+  <p>从仓库文件与全部讨论流中<b>提纯</b>出可复用、可传承的玩法与长期资产，记录每一代的<b>迭代与优化</b>，并给出三条传承线路。<br>
+  一句话定位：<b>目录卷告诉你"有什么、在哪"；本卷告诉你"从哪来、怎么变、传给谁"。</b></p>
+  <div class="meta">v1.0 · 2026-09-05 · decision_log #33 · 载体 docs/HPE_HERITAGE_PLAYBOOKS_20260905.html · 与《框架与玩法总览（目录卷）》互为姊妹卷</div>
+</header>
+
+<div class="duo">📚 <b>三卷导航</b>：
+  ① <b>目录卷</b> = <a href="HPE_FRAMEWORKS_PLAYBOOK_CATALOG_20260905.html">《框架与玩法总览（长期资产版）》</a> —— 空间维度：六层体系、全部框架卡片、移植指南 🟢🟡🔴、文件地图。
+  ② <b>传承卷</b>（本卷）= 时间维度：世代树、玩法卡、迭代定律、传承三线。③ <b>卡册卷</b> = <a href="HPE_PLAYBOOK_CARDS_20260905.html">《玩法卡册》</a>（工具箱：卡A-H 八张可复制操作卡——做T SOP/雷达节奏/年度收益法/复职重参/五前提计分/冷启动8步/老化处置/机构观点三角验证[v1.1]，§6 Backlog 已全部转正）。三卷可独立阅读，合读完整。</div>
+
+<nav class="toc">
+  <a href="#s0">§0 提纯标准</a>
+  <a href="#s1">§1 世代树</a>
+  <a href="#s2">§2 玩法卡 ×7</a>
+  <a href="#s3">§3 资产四库</a>
+  <a href="#s4">§4 迭代史与三定律</a>
+  <a href="#s5">§5 传承三线</a>
+  <a href="#s6">§6 提纯 Backlog</a>
+  <a href="#s7">§7 双卷地图</a>
+</nav>
+
+<!-- ============ §0 ============ -->
+<section id="s0">
+<h2>§0 提纯标准：什么够格成为"长期资产" <span class="en">Distillation Bar</span></h2>
+
+<div class="card">
+  <h4>资产五关（全部通过才进本卷）</h4>
+  <table>
+    <tr><th style="width:50px;">关</th><th style="width:200px;">标准</th><th>含义</th><th style="width:240px;">未过怎么办</th></tr>
+    <tr><td>①</td><td><b>实战用过 ≥1 轮</b></td><td>在真实行情或真实决策里跑过；零样本资产须自带验证判据（如 AAWS 的 8 周判据）</td><td>进 §6 Backlog，不进正文</td></tr>
+    <tr><td>②</td><td><b>有书面判据</b></td><td>对/错可判，不含糊——"感觉好"不是资产</td><td>回 decision_log 补判据列</td></tr>
+    <tr><td>③</td><td><b>有失效条件</b></td><td>写明什么时候作废/降级（如 IV&lt;30% 退役、三支柱翻红即停）</td><td>没有失效条件的"资产"是迷信</td></tr>
+    <tr><td>④</td><td><b>有载体文件</b></td><td>仓库可查、路径唯一，不活在对话里</td><td>先补载体再谈传承</td></tr>
+    <tr><td>⑤</td><td><b>有可移植性标注</b></td><td>🟢 原样移植 / 🟡 重参数化 / 🔴 标的专属</td><td>按目录卷 §⑧ 补标</td></tr>
+  </table>
+</div>
+
+<div class="grid2">
+<div class="card">
+  <h4>提纯漏斗（信息如何变成资产）</h4>
+  <p style="font-family:Consolas,Menlo,monospace; font-size:12.5px; line-height:2;">
+  对话流（易逝）<br>
+  &nbsp;&nbsp;↓ 过账<br>
+  decision_log（#号，只增不删）<br>
+  &nbsp;&nbsp;↓ 成文<br>
+  框架 / 手册 / 协议文件（载体）<br>
+  &nbsp;&nbsp;↓ 提纯<br>
+  <b>本卷卡片（可传承形态）</b></p>
+  <p>跳过任何一层 = 丢失风险；<b>不过账的迭代 = 没发生</b>。</p>
+</div>
+<div class="card">
+  <h4>本卷提纯成果</h4>
+  <div class="kpi">
+    <div><b>7</b>玩法卡片</div>
+    <div><b>4</b>资产库</div>
+    <div><b>1</b>棵世代树</div>
+    <div><b>3</b>条迭代定律</div>
+    <div><b>3</b>条传承线</div>
+    <div><b>4</b>项提纯 Backlog</div>
+  </div>
+  <p>结论：这个库最值钱的不是任何单一框架，而是<b>"框架会老化、账本不老化"</b>这套自我更新机制本身。</p>
+</div>
+</div>
+</section>
+
+<!-- ============ §1 ============ -->
+<section id="s1">
+<h2>§1 世代树：玩法从哪来 <span class="en">Lineage Tree</span></h2>
+
+<div class="tree">
+祖辈 · 量化研究层（统计父辈）　<span style="color:#5a6a7e;">scripts/hpe_quant_research_multisheet.py · K值/振幅分布/获利比例</span><br>
+&nbsp;&nbsp;└─> <b>一代 · 薅羊毛 v4.4（正股卫星仓）</b>　赚价差回归：振幅锚 A_up/A_dn + 被动挂单 + 场景三态<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─> <b>一代半 · v5.0（satellite_quote.py）</b>　价格源重排 / 单一事实源 / 卖前查CC —— 逻辑同 v4.4，工程强化<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─> <b>二代 · PFE-AAWS</b>　<span style="color:#b3362c;">★决定性跃迁：把"等"变成收入</span>（被动挂单 → 卖 Put 收租等指派）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─> <b>三代 · HPE-AAWS</b>　v1 移植(#26) → v2 六优化(#27) → v2.5 血统建档(#29) → v3 可靠性判决(#30) → v3.1 操作手册(#31)
+</div>
+
+<div class="quote">
+<b>血统判决（#29）</b>：三代同源，七个基因一脉相承；唯一决定性跃迁发生在 v4.4 → AAWS——
+<b>v4.4 赚的是价差回归，AAWS 把"等待"本身变成了租金收入</b>。其余差异全是参数级。
+</div>
+
+<h3>七基因映射表（父辈基因 → AAWS 形态）</h3>
+<table>
+  <tr><th style="width:170px;">基因</th><th style="width:270px;">v4.4 形态（正股版）</th><th>AAWS 形态（期权版）</th></tr>
+  <tr><td>1. 振幅锚</td><td>A_up / A_dn 定挂单价</td><td>行权价带（strike≤50 生命线）</td></tr>
+  <tr><td>2. 被动挂单</td><td>挂单等回落成交</td><td>卖 Put 被动等行权（等 = 收租）</td></tr>
+  <tr><td>3. 财报窗禁新仓</td><td>±7 天禁新仓</td><td>窗口制（9/9 → 11 月下旬）</td></tr>
+  <tr><td>4. 月 3 轮上限</td><td>MAX_ROUNDS_PER_MONTH=3</td><td>两槽制（backbone 月权 + rotator 周权）</td></tr>
+  <tr><td>5. 核心+卫星</td><td>核心仓 + 卫星仓</td><td>底仓 200 股 + 库存批（永不进引擎）</td></tr>
+  <tr><td>6. 场景识别</td><td>强/中/弱三态</td><td>三态 L=0.2（边界 45.70）</td></tr>
+  <tr><td>7. 卖前查 CC</td><td>防重复挂单</td><td>卖前查 CC 防裸卖（v5.0 风控继承）</td></tr>
+</table>
+
+<div class="quote">
+<b>转世案例（玩法不死，只换载体）</b>：#15 时代的被动挂单 49.44 / 47.84（+0.5×ATR≈1.32），
+在 AAWS 里转世为 <b>A_dn 锚的期权化</b>——不再挂单等股价，而是把那条价格线卖成 Put 的行权价带。
+</div>
+</section>
+
+<!-- ============ §2 ============ -->
+<section id="s2">
+<h2>§2 玩法卡片 ×7 <span class="en">Playbook Cards</span></h2>
+<p style="color:var(--sub); font-size:13.5px;">每张卡 = 打法一句话 + 血统迭代 + 判据门槛 + 失效条件 + 载体。状态截至 2026-09-05。</p>
+
+<div class="card">
+  <h4>玩法① 薅羊毛 · 正股卫星仓 <span class="tag ta">🟡 重参数化</span><span class="tag tr">⏸ 降级参考器（#30）</span></h4>
+  <div class="one">急跌日用卫星仓接飞刀、反弹用 CC 卖压回——赚价差回归。</div>
+  <p><span class="lbl">血统/迭代</span>：v4.4 → v5.0（工程强化）。一代目，AAWS 的父辈。</p>
+  <p><span class="lbl">为何降级</span>：2026 振幅 regime 6.40%/8.04%（近45日），旧锚（P75 2.50-3.53%）过期 2-3 倍；获利比例贴 95% 触发买侧永久硬阻断。逻辑✅ 参数❌。</p>
+  <p><span class="lbl">复职三步</span>：① 2026 数据或 ATR14 重算 A_up/A_dn → ② A_up 给 CC 定价、A_dn 给阶梯微调（T 触发不变）→ ③ 5 日胜率 &gt;55% 恢复报价资格。</p>
+  <p><span class="lbl">载体</span>：<code>options/satellite_quote.py</code> v5.0 · 判决全文 = AAWS 评估文档 v3 节</p>
+</div>
+
+<div class="card">
+  <h4>玩法② HPE-AAWS 双槽引擎 <span class="tag tg">🟢 骨架可移植</span><span class="tag ta">🟡 参数本地化</span><span class="tag tb">🔥 待点火（9/9 拉链拍板）</span></h4>
+  <div class="one">底仓不动，两个引擎槽轮流卖 Put 收租：backbone 月权扛主力，rotator 周权捡节奏。</div>
+  <p><span class="lbl">血统/迭代</span>：三代目（见 §1）。v1 移植五前提 → v2 六优化（接货批CC入引擎≥+4 / 三态边界45.70 / 底仓释出拒绝 / Strangle 条件启用）→ v3 判决 → v3.1 手册。</p>
+  <p><span class="lbl">判据门槛</span>：backbone CSP ≥$2.30/张（≈IV50%；$1.80-2.29 顺延 Nov20；&lt;$1.80 弃；P48 出局；可 2 张、门槛不降）；rotator 需 spot≤50 才开、带外 ≥$0.40；周三开仓；strike≤50 生命线；财报窗 ±7 天禁新仓。</p>
+  <p><span class="lbl">可靠性</span>：单笔无优势，<b>可靠=结构五件套</b>；零实盘轮 → 8 周判据（≥75% 达标）。层级：β底仓＞三道闸＞引擎＞报价器——两引擎全灭≈少收 $1-2k/年租金，不伤本金。</p>
+  <p><span class="lbl">失效条件</span>：basis&gt;50 两次停 / 8 周 &lt;75% 停 / IV&lt;30% 退役 / 三支柱翻红即停。</p>
+  <p><span class="lbl">载体</span>：<code>reports/HPE/2026-09-05/aaws_porting_assessment_20260905.md</code>（v1→v3.1 全代）· <code>journal/wheel_log_HPE.md</code>（9/9 启用）</p>
+</div>
+
+<div class="card">
+  <h4>玩法③ 极端日做 T <span class="tag tg">🟢 结构</span><span class="tag ta">🟡 触发参数</span></h4>
+  <div class="one">单日 ≥-7~8% 或跌破 MA30 的恐慌日，买 100 股接恐慌盘，ATR 挂单机械执行。</div>
+  <p><span class="lbl">判据</span>：触发=极端跌幅或 MA30 下方；数量 100 股；执行层=价位+ATR 挂策略单（#25）。</p>
+  <p><span class="lbl">禁区</span>：52-54 区间日内 T；追 55+；动底仓。对应阶梯档 45.7-47.8（带内 ATM≥$1.00）。</p>
+  <p><span class="lbl">载体</span>：操作手册 v3.1 档位表（AAWS 评估 v3.1 节）· 教义 #22/#23/#35</p>
+</div>
+
+<div class="card">
+  <h4>玩法④ 阶梯加减仓（窗口制） <span class="tag tg">🟢 结构</span><span class="tag tr">🔴 价位专属</span></h4>
+  <div class="one">把"想买在哪"写成七档预案，价格到了执行、没到自动过期，不猜不追。</div>
+  <p><span class="lbl">判据</span>：窗口=9/9 → 11 月下旬（#25，取代旧岗位制）；12/2=重规划日非闸门；未触发档位关窗自动过期；深档 ≤41/800 股场景移出窗口。</p>
+  <p><span class="lbl">七档速查</span>：≥54.42 持有禁 rotator ｜ 52-54.4 周三开 backbone ｜ 50-52 backbone 主战场+挂单站岗 ｜ 47.8-50 一档执行+rotator 开 ｜ 45.7-47.8 极端日 T ｜ &lt;45.70 双侧停手+引擎停 ｜ 41-45 二档+200→600 股。</p>
+  <p><span class="lbl">迭代史</span>：v1 加法错位（#23 自纠留痕）→ 岗位制 → 窗口制（#25）→ 并入手册 7 档（#31）。</p>
+  <p><span class="lbl">载体</span>：<code>journal/decision_log.md</code> #23/#25 · AAWS 评估 v3.1 节主速查表</p>
+</div>
+
+<div class="card">
+  <h4>玩法⑤ 链上侦察（拉链） <span class="tag tg">🟢 SOP 全套可移植</span></h4>
+  <div class="one">CBOE 延时链一把拉下全链 → 过滤垃圾行 → 出五件套决策单，触发词"拉链"【#56 升级：+⑥OI/IV增量对比=六件套】。</div>
+  <p><span class="lbl">SOP</span>：<code>cdn.cboe.com/api/global/delayed_quotes/options/HPE.json</code> 无 key 全链；过滤 0DTE 收盘后行 / iv=0 / IV&gt;0.8 陈旧行；快照 ±30% 有效、执行日须重拉；结合走势+量化+链+仓库四源出单。</p>
+  <p><span class="lbl">战绩</span>：#28 首拉成功（ATM IV≈55%、9/18 P50=$1.30、OI 6,095）→ 9/9 菜单预演已出。</p>
+  <p><span class="lbl">载体</span>：跟踪协议 §六 · 快照 <code>data/HPE/HPE_options_chain_20260905_cboe_recon.md</code></p>
+</div>
+
+<div class="card">
+  <h4>玩法⑥ 翻转/下车判据 <span class="tag ta">🟡 判据结构</span><span class="tag tr">🔴 内容专属</span></h4>
+  <div class="one">下车只认论点，永非价格：T1-T5 破坏条件是唯一的卖出硬理由。</div>
+  <p><span class="lbl">判据</span>：论点破坏=硬提醒；估值/换仓=软建议用户拍板；R8=破 MA60+爆量阴线<b>双条件缺一不可</b>；三支柱翻红=引擎即停；回调先问论点，不机械止损。</p>
+  <p><span class="lbl">载体</span>：<code>journal/logic_baseline.md</code> 判词 · thesis 文档破坏条件节</p>
+</div>
+
+<div class="card">
+  <h4>玩法⑦ Wheel 长期收租 <span class="tag tg">🟢 骨架</span><span class="tag tb">📋 待 9/9 启用</span></h4>
+  <div class="one">CC+Put 循环的记账外壳：每一轮的进出、租金、判据检查全在 wheel_log 里。</div>
+  <p><span class="lbl">判据</span>：年租目标 ~18-19%；月 3 轮上限 → 两槽制；接货批 CC 入引擎（溢价 ≥+4）；每轮结算查判据（触发词"结算"）。</p>
+  <p><span class="lbl">载体</span>：<code>journal/wheel_log_HPE.md</code> · 问答契约（#31）</p>
+</div>
+</section>
+
+<!-- ============ §3 ============ -->
+<section id="s3">
+<h2>§3 长期资产四库 <span class="en">Asset Vaults</span></h2>
+
+<h3>3.1 流程资产库 <span class="tag tg">🟢 原样移植</span></h3>
+<table>
+  <tr><th style="width:220px;">资产</th><th>一句话定义</th><th style="width:260px;">载体</th></tr>
+  <tr><td>decision_log 双轨制</td><td>每条记录带"对错判据"列，判断与操作分轨，只增不删</td><td><code>journal/decision_log.md</code>（33 条）</td></tr>
+  <tr><td>logic_baseline 活性判词</td><td>15 条判词快照，每轮 diff——框架老化的探测器</td><td><code>journal/logic_baseline.md</code></td></tr>
+  <tr><td>作战卡四情景</td><td>涨/跌/平/黑天鹅四情景预写动作，行情来了只执行不思考</td><td>作战卡文档</td></tr>
+  <tr><td>问答契约</td><td>"拉链"→五件套（#56 升级：六件套） / "咋玩"→7 档表报动作 / "结算"→wheel_log+判据 / 周五→周报</td><td>AAWS 评估 v3.1 节 · #31</td></tr>
+  <tr><td>宪法 v1.0</td><td>新会话首读 README+宪法、输出"📋 上下文已加载"；reset/force push 须确认；README 只增不删</td><td>宪法文档</td></tr>
+  <tr><td>双 README + HANDOFF</td><td>AGENT-README（对话史+状态行）/ HANDOFF（交接全景），双轨防遗漏</td><td><code>AGENT-README.md</code> · <code>HANDOFF.md</code></td></tr>
+  <tr><td>跟踪协议（会话五步+雷达）</td><td>每轮 logic_baseline diff+变更戳+时间戳纪律；生态/同行雷达</td><td><code>docs/HPE_TRACKING_PROTOCOL_20260905.md</code></td></tr>
+  <tr><td>冷启动 8 步</td><td>新股从零到首笔计划内动作的完整流程（详见目录卷 §⑧）</td><td>目录卷 §⑧</td></tr>
+  <tr><td>移植五前提计分卡</td><td>跨标的移植前先打分，不及格不动手</td><td>AAWS 评估 v1 节 · 目录卷 §⑧</td></tr>
+  <tr><td>全量同步轮（规矩 29）</td><td>轮末自检：所有信息入库+落点核对，缺口清零</td><td>decision_log #32（范例）</td></tr>
+</table>
+
+<h3>3.2 方法论资产库 <span class="tag ta">🟡 重参数化后移植</span></h3>
+<table>
+  <tr><th style="width:220px;">方法论</th><th>一句话定义</th><th style="width:150px;">世代/状态</th></tr>
+  <tr><td>双眼框架</td><td>基本面+筹码面双视角互证，防单眼盲区</td><td>常青</td></tr>
+  <tr><td>321 收敛</td><td>三线索→两确认→一结论的收敛研究法</td><td>常青</td></tr>
+  <tr><td>振幅锚体系</td><td>用历史振幅分位数定 A_up/A_dn——<b>首个实锤"资产老化"案例</b>（#30）</td><td>一代 · 降级参考器</td></tr>
+  <tr><td>估值中枢 60-65</td><td>多法收敛的公允区间，软建议之锚</td><td>🔴 数字专属</td></tr>
+  <tr><td>MA-R8 技术判据</td><td>MA 族+量价八条，R8 双条件缺一不可</td><td>🟡 结构可移植</td></tr>
+  <tr><td>年度收益统计法</td><td>全年交易日收益分布画像（#16）</td><td>🟡 方法可移植</td></tr>
+  <tr><td>生态/同行雷达</td><td>同行只改节奏、不改论点——雷达校节奏，不动论点</td><td>常青</td></tr>
+</table>
+
+<h3>3.3 工具资产库 <span class="tag tb">代码类 · 🟡 需配参</span></h3>
+<table>
+  <tr><th style="width:280px;">工具</th><th>一句话定义</th><th style="width:180px;">世代</th></tr>
+  <tr><td><code>scripts/hpe_chip_scanner_v5.2.py</code> 筹码仪</td><td>多 Sheet 筹码分布体检（N1700 为其数据源）</td><td>v5.2</td></tr>
+  <tr><td><code>options/satellite_quote.py</code></td><td>薅羊毛报价器：价格源重排/单一事实源/卖前查CC</td><td>v5.0（v4.4 后继）</td></tr>
+  <tr><td><code>scripts/hpe_quant_research_multisheet.py</code></td><td>量化研究层（统计父辈）：K值/振幅/获利比例</td><td>祖辈 · 归档</td></tr>
+  <tr><td>CBOE 链上 recon 流程</td><td>延时链快照+垃圾行过滤+五件套判读（#56 升级：六件套，增OI/IV增量对比）</td><td>SOP · #28 生效</td></tr>
+  <tr><td><code>journal/wheel_log_HPE.md</code></td><td>轮动引擎流水账（每轮进出+判据检查）</td><td>待 9/9 启用</td></tr>
+</table>
+
+<h3>3.4 数据资产库 <span class="tag tr">🔴 标的专属</span></h3>
+<table>
+  <tr><th style="width:300px;">数据</th><th>用途</th></tr>
+  <tr><td>N1700 筹码数据（chipdata）</td><td>振幅 regime 统计源（#30 判决的证据基底）</td></tr>
+  <tr><td>Yahoo 日线 68 根</td><td>MA/ATR/振幅体检基底</td></tr>
+  <tr><td>CBOE 链快照 20260905</td><td>9/9 菜单预演的底稿（±30% 有效）</td></tr>
+  <tr><td>成本锚 $17.943 / 200 股</td><td>券商口径（#17），一切浮盈计算的原点</td></tr>
+</table>
+</section>
+
+<!-- ============ §4 ============ -->
+<section id="s4">
+<h2>§4 迭代史：怎么变 <span class="en">Evolution &amp; Laws</span></h2>
+
+<h3>4.1 里程碑时间线（资产视角）</h3>
+<table>
+  <tr><th style="width:110px;">时点</th><th style="width:280px;">事件</th><th>资产影响</th></tr>
+  <tr><td>建库期</td><td>thesis / 双眼 / 321 / 作战卡</td><td>研究底座成形（一代方法）</td></tr>
+  <tr><td>#15</td><td>被动挂单 49.44 / 47.84</td><td>挂单基因首次表达（后转世为 A_dn 期权锚）</td></tr>
+  <tr><td>#16-#17</td><td>年度收益统计法 · 成本锚 $17.943</td><td>方法论+数据资产入库</td></tr>
+  <tr><td>#21</td><td>薅羊毛查仓 · CSP 门槛 ≥$2.30</td><td>第一道量化闸门诞生（至今未松动）</td></tr>
+  <tr><td>#23</td><td>阶梯 v2（自纠加法错位）· 岗位制</td><td>迭代定律 2 的首次实锤：错误留账、后版纠错</td></tr>
+  <tr><td>#25</td><td>窗口制取代岗位制</td><td>参数归用户、判据归体系成文</td></tr>
+  <tr><td>#26/#27</td><td>AAWS 移植五前提 · v2 六优化</td><td>三代目引进，两槽制+strike≤50 生命线</td></tr>
+  <tr><td>#28</td><td>链上侦察 SOP（拉链）</td><td>工具资产新增 SOP 类</td></tr>
+  <tr><td>#29</td><td>血统三代同源建档</td><td>七基因映射——传承有了基因图谱</td></tr>
+  <tr><td>#30</td><td>可靠性判决</td><td><b>首个资产老化→降级→复职完整案例</b></td></tr>
+  <tr><td>#31</td><td>操作手册 v3.1</td><td>7 档速查+问答契约——资产变成可执行指令</td></tr>
+  <tr><td>#32</td><td>全量同步 5</td><td>落点闭环：所有资产在四件套可定位</td></tr>
+  <tr><td>#33</td><td><b>本卷（提纯与传承）</b></td><td>资产获得时间维度+传承路径</td></tr>
+</table>
+
+<h3>4.2 迭代三定律（从 33 条账里蒸馏出来的元规则）</h3>
+<div class="law"><b>定律一 · 参数随行情进化，判据不随行情松动。</b><br>
+振幅锚过期 2-3 倍→重算（参数层）；CSP 门槛 ≥$2.30 无论 IV 多诱人都不降（判据层）。混层是失控的开始。</div>
+<div class="law"><b>定律二 · 历史只增不删，错误留账、后版纠错留痕。</b><br>
+#23 阶梯数学自纠、b664324 部分提交纠偏——账面上允许犯错，不允许消失。</div>
+<div class="law"><b>定律三 · 不过账的迭代 = 没发生。</b><br>
+decision_log + logic_baseline diff + 载体文件，三处同步才算一次真迭代；缺一处即缺口（#32 自检的意义）。</div>
+
+<h3>4.3 资产老化机制（本库独有的自我更新）</h3>
+<div class="card">
+  <p><b>半衰期分层</b>：参数类资产半衰期 ≈ 1 个行情 regime（振幅翻 2-3 倍即过期）；流程类资产近常青；事实类资产随财报/除息硬更新。</p>
+  <p><b>老化探测器</b>：logic_baseline 每轮 diff + N1700 regime 统计——不靠感觉发现过期，靠统计。</p>
+  <p><b>标准处置流程</b>（#30 首案例）：老化实锤 → 降级（参考器/停用）→ 复职三步（重算参数 → 重分配角色 → 小样本胜率验证）→ 恢复或退役。</p>
+  <p class="one">判据归体系：降级不是判错，是判据在工作。</p>
+</div>
+</section>
+
+<!-- ============ §5 ============ -->
+<section id="s5">
+<h2>§5 传承三线：传给谁 <span class="en">Three Lines of Inheritance</span></h2>
+
+<div class="grid2">
+<div class="card">
+  <h4>线一 · 会话传承（agent ↔ agent）</h4>
+  <p>跨会话不失忆的接力棒：</p>
+  <p>宪法首读 → 四件套（HANDOFF / AGENT-README / logic_baseline / decision_log）→ 双卷（目录+传承）→ 输出"📋 上下文已加载"。</p>
+  <p>问答契约让新会话秒懂暗号：拉链 / 咋玩 / 结算 / 周报。</p>
+  <p class="one">检验：任何新会话 10 分钟内能接手任意一环。</p>
+</div>
+<div class="card">
+  <h4>线二 · 标的传承（stock ↔ stock）</h4>
+  <div class="quote" style="margin:6px 0;"><b>移植哲学：复制流程账本、重算参数、永不复制结论。</b></div>
+  <p>反例档案：同一套 AAWS——PFE 工业化复制成功；TSLA/NVDA 参数照搬=自杀。</p>
+  <p>流程：五前提计分卡先行 → 冷启动 8 步 → 🟢 直接搬 / 🟡 跑历史数据重算 / 🔴 从零研究。</p>
+  <p class="one">检验：新股只允许继承"流程+参数算法"，永远不继承"价位+结论"。</p>
+</div>
+</div>
+
+<div class="card">
+  <h4>线三 · 世代传承（version ↔ version）</h4>
+  <p>版本升级不断裂的保险丝：① 版本号纪律（v4.4→v5.0→AAWS v1→v2→v2.5→v3→v3.1）；② 血统文档（v2.5 基因映射表，换代先验基因）；③ 转世机制（挂单→A_dn，玩法不死只换载体）；④ 老化处置（降级/复职/退役三态，见 §4.3）。</p>
+</div>
+
+<h3>可移植性总速览（详表见目录卷 §⑧）</h3>
+<table>
+  <tr><th style="width:60px;">级别</th><th style="width:220px;">含义</th><th>代表资产</th></tr>
+  <tr><td><span class="tag tg">🟢</span></td><td>原样照抄（约 12 件流程）</td><td>decision_log 双轨 / 作战卡 / AAWS 骨架 / 7 档表结构 / 问答契约 / 链上 SOP / 冷启动 8 步</td></tr>
+  <tr><td><span class="tag ta">🟡</span></td><td>跑历史数据重算（约 8 项参数）</td><td>振幅锚 / CSP 门槛带 / 阶梯带 / L、K / 估值法 / MA-R8 阈值</td></tr>
+  <tr><td><span class="tag tr">🔴</span></td><td>永不复制（标的专属）</td><td>T1-T5 论点内容 / 60-65 中枢 / 一切具体价位 / 基本面事实</td></tr>
+</table>
+</section>
+
+<!-- ============ §6 ============ -->
+<section id="s6">
+<h2>§6 提纯 Backlog：下一轮迭代候选 <span class="en">Distillation Backlog</span></h2>
+<p style="color:var(--sub); font-size:13.5px;">信息已在库里但还散落、未成独立资产卡的候选。全部 🟡——须先过资产五关第①关（实战/验证）再转正。</p>
+<table>
+  <tr><th style="width:220px;">候选</th><th style="width:280px;">现状（散落处）</th><th>提纯动作</th></tr>
+  <tr><td>做 T 完整 SOP 卡</td><td>教义散在 #22/#23/#35 + 手册 45.7-47.8 档</td><td>合并成一页独立卡：触发/数量/挂单/禁区/结算</td></tr>
+  <tr><td>生态雷达节奏卡</td><td>跟踪协议雷达节 + "同行只改节奏不改论点"</td><td>独立卡片：扫描频率/触发动作/输出格式</td></tr>
+  <tr><td>年度收益统计法卡</td><td>#16 报告内嵌方法</td><td>抽出方法论卡：数据源/口径/重跑步骤</td></tr>
+  <tr><td>玩法①复职重参模板</td><td>#30 复职三步（判决文内）</td><td>模板化：换任何标的都能走一遍复职流程</td></tr>
+</table>
+</section>
+
+<!-- ============ §7 ============ -->
+<section id="s7">
+<h2>§7 双卷地图与文件导航 <span class="en">Master Map</span></h2>
+<div class="card">
+  <h4>双卷分工</h4>
+  <table>
+    <tr><th style="width:180px;">卷</th><th style="width:160px;">维度</th><th>回答的问题</th></tr>
+    <tr><td>目录卷（Catalog）</td><td>空间</td><td>库里有什么框架/玩法/工具？在哪？可移植性如何？</td></tr>
+    <tr><td><b>传承卷（本卷）</b></td><td>时间</td><td>它们从哪来？迭代了几代？为什么会变？传给谁、怎么传？</td></tr>
+  </table>
+  <p class="one">维护约定：框架内容变动以 logic_baseline 与 decision_log 为准；两卷为静态快照，大版本节点（如引擎点火、玩法①复职）时更新。</p>
+</div>
+<div class="card">
+  <h4>一句话总结</h4>
+  <div class="quote" style="margin:4px 0;">这个库真正可传承的资产 = <b>7 个带判据的玩法 + 4 库载体 + 3 条迭代定律 + 3 条传承线</b>。
+  前两者是"家产"，后两者是"家规"——家产会折旧，家规让家产永远翻新。</div>
+</div>
+</section>
+
+<div class="sumcard"><pre>📋 摘要卡 · 传承总卷 v1.0（#33）
+├─ 提纯：资产五关准入 + 提纯漏斗（对话→#号→载体→卡片）
+├─ 血统：量化研究 → v4.4/v5.0 → PFE-AAWS（等=收入）→ HPE-AAWS v1→v3.1
+├─ 玩法：7 张卡（①降级参考器 ②待9/9点火 ③极端日T ④阶梯窗口制 ⑤拉链 ⑥翻转判据 ⑦wheel）
+├─ 迭代三定律：参数进化判据不松 / 只增不删纠错留痕 / 不过账=没发生
+├─ 传承三线：会话（四件套+契约）/ 标的（复制流程重算参数不复制结论）/ 世代（基因+转世+老化处置）
+└─ 资产老化：参数类≈1个regime；探测器=baseline diff+N1700；处置=降级→复职三步→恢复/退役</pre></div>
+
+<footer>HPE 研究库 · 玩法提纯与传承总卷 v1.0 · 2026-09-05 · decision_log #33 · 姊妹卷：HPE_FRAMEWORKS_PLAYBOOK_CATALOG_20260905.html</footer>
+</div>
+</body>
+</html>

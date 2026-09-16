@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<!-- ⚠️ HPE 期权买方玩法页（新系列，与 OPERATION_PANEL 系列分离）：
+     依据=仓库框架：卡M 六闸+H1-H4（CALL_BUYING_PLAYBOOK_20260912.md #79）/ 链上侦察SOP（跟踪协议§六·玩法卡⑤）/ ⑪机会地图（#69）/ 窗口制（#25）/ AAWS引擎（#26-#27）/ 财报溢价区别定价（#57）/ T阶梯（#54-#55）/ 翻转④（#24）/ 卖出挂单三问（#75）。
+     链数据=本页随附快照 data/HPE/HPE_options_chain_20260911_cboe_recon.md（CBOE 延时链·9/11 收盘口径）。
+     自检：python3 scripts/panel_check.py（面板系列 12 段 PASS 为提交前置；本页不属于面板系列） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HPE 期权买方玩法页 20260913 · 买 CALL 的稳健路径（卡M 实战版）</title>
+<style>
+  :root{
+    --ink:#1a2332; --sub:#5a6a7e; --line:#e3e8ef; --bg:#f7f9fb; --card:#ffffff;
+    --blue:#1e5aa8; --teal:#0e7c6b; --amber:#b26a00; --red:#b3362c; --green:#1c7a3d; --purple:#6b4fa0;
+    --chip-green:#e6f4ea; --chip-amber:#fdf3e0; --chip-red:#fbe9e7; --chip-blue:#e8f0fb; --chip-teal:#e2f3f0; --chip-purple:#f0eaf8;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+       color:var(--ink); background:var(--bg); line-height:1.6; font-size:15px;}
+  .wrap{max-width:1140px; margin:0 auto; padding:24px 18px 70px;}
+  header.hero{background:linear-gradient(135deg,#0f2f52 0%,#1e5aa8 60%,#0e7c6b 130%);
+    color:#fff; border-radius:14px; padding:26px 30px 22px; margin-bottom:20px;}
+  header.hero h1{font-size:24px; margin-bottom:6px;}
+  header.hero p{opacity:.92; font-size:13.5px; max-width:960px;}
+  .nowbar{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;}
+  .nowbar div{background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.25);
+    border-radius:10px; padding:7px 14px; font-size:12.5px;}
+  .nowbar b{font-size:15px;}
+  .warn{background:#fff8e6; border:1px solid #ecd9a0; border-radius:10px; padding:10px 16px;
+    font-size:13px; margin-bottom:20px;}
+  .risk{background:#fff1f0; border:1px solid #f0c4bd; border-radius:10px; padding:10px 16px;
+    font-size:13px; margin-bottom:20px;}
+  section{margin-bottom:28px;}
+  h2{font-size:19px; padding:9px 0 7px; border-bottom:2px solid var(--blue); margin-bottom:14px; color:#12305c;}
+  h2 .en{font-size:12px; color:var(--sub); font-weight:normal; margin-left:8px;}
+  h2 .new{display:inline-block;font-size:10.5px;background:#1e5aa8;color:#fff;border-radius:12px;padding:1px 8px;margin-left:8px;vertical-align:2px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 20px; margin-bottom:14px;}
+  .card p{font-size:13.5px; margin:4px 0;}
+  table{width:100%; border-collapse:collapse; font-size:13px; margin:8px 0;}
+  th{background:#eef3f9; color:#12305c; text-align:left; padding:7px 10px; border:1px solid var(--line);}
+  td{padding:7px 10px; border:1px solid var(--line); vertical-align:top;}
+  code,.file{font-family:Consolas,Menlo,monospace; font-size:12px; background:#eef2f7; border-radius:4px; padding:1px 6px; color:#31435c;}
+  .tag{display:inline-block; font-size:11.5px; font-weight:700; border-radius:20px; padding:2px 10px; margin-left:6px; vertical-align:1px;}
+  .tg{background:var(--chip-green); color:var(--green);}
+  .ta{background:var(--chip-amber); color:var(--amber);}
+  .tr{background:var(--chip-red); color:var(--red);}
+  .tb{background:var(--chip-blue); color:var(--blue);}
+  .tt{background:var(--chip-teal); color:var(--teal);}
+  .tp{background:var(--chip-purple); color:var(--purple);}
+  .quote{border-left:4px solid var(--teal); background:#f0f8f6; padding:9px 15px; border-radius:0 8px 8px 0; font-size:13.5px; margin:8px 0;}
+  .chk{list-style:none; font-size:13.5px;}
+  .chk li{padding:4px 0 4px 28px; position:relative; border-bottom:1px dashed var(--line);}
+  .chk li:before{content:"☐"; position:absolute; left:4px; color:var(--blue); font-size:16px;}
+  .sumcard{background:linear-gradient(135deg,#eef3fb,#eef8f5); border:1px solid #c7d9f2; border-radius:12px; padding:14px 20px; font-size:13.5px; margin-top:22px;}
+  .sumcard pre{font-family:inherit; white-space:pre-wrap; margin:0;}
+  .ladder{border-collapse:separate; border-spacing:0 6px; font-size:13px;}
+  .ladder td{border:none; padding:9px 12px; vertical-align:middle;}
+  .ladder tr td:first-child{width:165px; font-weight:800; font-size:14px; border-radius:10px 0 0 10px; text-align:center;}
+  .ladder tr td:last-child{border-radius:0 10px 10px 0;}
+  .z1 td:first-child{background:#e6f4ea; color:var(--green);} .z1 td:last-child{background:#f4fbf6; border:1px solid #d5ecdc; border-left:none;}
+  .z2 td:first-child{background:#f0eaf8; color:var(--purple);} .z2 td:last-child{background:#faf8fd; border:1px solid #ddd2f0; border-left:none;}
+  .z3 td:first-child{background:#e8f0fb; color:var(--blue);}  .z3 td:last-child{background:#f5f9fe; border:1px solid #d4e2f4; border-left:none;}
+  .z4 td:first-child{background:#e2f3f0; color:var(--teal);} .z4 td:last-child{background:#f2faf8; border:1px solid #cfe8e2; border-left:none;}
+  .z5 td:first-child{background:#fdf3e0; color:var(--amber);} .z5 td:last-child{background:#fffbf2; border:1px solid #f0e2c0; border-left:none;}
+  .z6 td:first-child{background:#fbe9e7; color:var(--red);}  .z6 td:last-child{background:#fdf4f3; border:1px solid #f0d3cf; border-left:none;}
+  .z7 td:first-child{background:#3d4a5d; color:#fff;}        .z7 td:last-child{background:#f3f5f8; border:1px solid #dde3ea; border-left:none;}
+  footer{color:var(--sub); font-size:12px; text-align:center; margin-top:34px;}
+  @media print{ body{background:#fff;} .wrap{max-width:100%;} section{page-break-inside:avoid;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>HPE 期权买方玩法页 · 买 CALL 的稳健路径 <span style="font-size:13px;font-weight:normal;opacity:.85;">卡M 实战版 · 20260913</span></h1>
+  <p>以 HPE 为例、仓库框架为依据：估值先说便宜（V），波动率再说便宜（W），结构给出位置，日历给出时机，到期盖住恢复，资金=一次正股加仓的对价——<b>六闸全绿才买</b>。链数据=CBOE 延时链 9/11 收盘口径（本页随附快照）。<b>判据源=仓库（decision_log #80 为止），冲突以库为准。</b></p>
+  <div class="nowbar">
+    <div>链口径<br><b>9/11 收盘（周日拉取）</b><span style="font-size:11px;opacity:.8;">｜spot parity 62.3-62.7✓</span></div>
+    <div>六闸体检<br><b>4 红 1 黄 1 参数（G5=✓ 勘误#82）</b><span style="font-size:11px;opacity:.8;">｜结论=现在不买（G1-G3 三红+H4 数学）</span></div>
+    <div>Nov20 P50 实价<br><b>1.65/2.00 ＜ $2.30 ✗</b><span style="font-size:11px;opacity:.8;">｜9/16 议程提前完成</span></div>
+    <div>ATM IV<br><b>Nov 62% / Dec 66%（含财报溢价+4pp）</b></div>
+    <div>买点<br><b>B≤46.9 权开（≈⑪O2 成交后）</b></div>
+  </div>
+</header>
+
+<div class="warn">⏱ <b>口径</b>：CBOE 延时链=9/11 收盘汇总（周末无盘）；iv=0 / IV&gt;0.8 深实值陈旧行照 SOP 过滤；10/30 周权 OI&lt;10 不采信。触发词「拉链」=本页第①节流程；下次例行拉链=9/16（周三）。</div>
+
+<div class="risk">🥶 <b>一句话判定（10 秒版）</b>：HPE 现价 62.09 → V=0.99~1.05（D 档）+ HV 分位 P91 → <b>买 CALL 六闸五红，稳健玩法=现在不买、等表</b>。三扇门：价格进 B 档（≤46.9）/ 锚上移（10-Q+12/2 兑现雷达平移）/ 事件后误杀（10-Q 窗后首日甄别）。<b>「稳健分析 然后去买」——分析已经做完，纪律就是玩法本身。</b></div>
+
+<!-- ============ 1. 六闸 ============ -->
+<section id="g1">
+<h2>① 六闸体检 <span class="en">Card-M Gates · all-green 才买</span><span class="new">#79/#80</span></h2>
+<table>
+  <tr><th style="width:150px;">闸</th><th>判据（卡M）</th><th style="width:300px;">HPE 现值（9/11 链口径）</th><th style="width:80px;">灯</th></tr>
+  <tr><td><b>G1 价值闸</b></td><td>V=现价÷基准：S≤0.55 / A≤0.65 / <b>B≤0.75（CALL 权开）</b> / C≤0.85（只加正股）/ D&gt;0.85 禁</td><td>V=0.99（÷中枢中值 62.5）/ 1.05（÷#36EV 59.4）→ D 档</td><td class="tr">🔴</td></tr>
+  <tr><td><b>G2 波动率闸</b></td><td>W=HV6M 十年分位 ≤40% ＋ 隐含 move ≤ 历史 median gap 8.7%</td><td>W=P91（HV6M 62.6%）；链上 ATM IV 62-66% 高位横住</td><td class="tr">🔴</td></tr>
+  <tr><td><b>G3 结构闸</b></td><td>入场=预注册支撑缩量回踩；<b>突破日禁追</b></td><td>62.09 在禁区上方；回踩位 60（翻转磁钉）→ 58（供给区）</td><td class="tr">🔴</td></tr>
+  <tr><td><b>G4 日历闸</b></td><td>财报窗 ±7 禁新仓；买点=事件后 IV crush</td><td>10-Q 中下旬=禁新仓窗；Dec18 IV 66% 已含财报溢价</td><td class="ta">🟡</td></tr>
+  <tr><td><b>G5 到期闸</b></td><td>最低到期 = max(恢复 p90, 最长)×1.5</td><td>现 regime 标定 ≥12 个月（n=4 B级）→ <b>勘误 #82（二次勘误）：280121=16.3 月✓✓ / 270917=12.2 月✓ 实际在架（#81「无合格期限」基于 #80 不完整快照；勘误链 #35→#81→#82 只增不删）→ G5=✓；「现在不买」由 G1-G3 三红 + H4 BE 数学（触发 46.9 下 54.4-63.3≫46.9·与期限无关）维持</b></td><td class="tg">🟢</td></tr>
+  <tr><td><b>G6 资金闸</b></td><td>单笔=一次正股加仓预算的对价；全损预付心态</td><td>参数归用户（三问铁则 §11）</td><td class="tb">⚪</td></tr>
+</table>
+<div class="quote">📐 <b>与⑪机会地图独立收敛</b>（两个体系、一个答案）：CALL 合法线 B=基准×0.75=46.9 ≈ ⑪ O2 主力档 48-49.5 成交之后；C=53.1 ≈ O1 52.0。估值没回来之前，CALL 和正股共用同一张等表。</div>
+</section>
+
+<!-- ============ 2. 期限阶梯 ============ -->
+<section id="g2">
+<h2>② 期限阶梯 · HPE 实价版 <span class="en">Tenor Ladder（9/11 链实价）</span></h2>
+<p class="card" style="font-size:13.5px;">你记忆里「3/6/9/12/15 个月」的阶梯（NVDA 页概念），HPE 化=按<b>实际挂牌到期</b>逐档核价。买哪个期限，买的是几层容错：<b>期限必须盖住「这只票从同等回撤爬回来的最慢速度」</b>——HPE 全史恢复 p90=86 个月（2017-2022 长尾），严格规则无可行期限；现 regime 口径 ≥12 个月（2024-06 后 4 次回撤 2.0/3.3/4.9/7.2 个月修复，n=4 B级小样本，随事件更新）。<b>这就是「重算参数、永不复制结论」：NVDA 27 个月 ≠ HPE 12 个月。</b></p>
+<table>
+  <tr><th>到期</th><th>期限</th><th>覆盖财报</th><th>ATM IV</th><th>Δ≥0.85 代表行（bid/ask）</th><th>单张成本</th><th>BE=K+权利金</th><th>H4: BE≤46.9</th></tr>
+  <tr><td>9/18</td><td>5 天</td><td>0</td><td>~60-63%</td><td>C55 7.05/7.40（Δ0.93）</td><td>$740</td><td>62.40</td><td class="tr">✗</td></tr>
+  <tr><td>9/25</td><td>12 天</td><td>0</td><td>~61-62%</td><td>C55 7.35/7.90（Δ0.86）</td><td>$790</td><td>62.90</td><td class="tr">✗</td></tr>
+  <tr><td>10/16</td><td>34 天</td><td>0</td><td>~60-64%</td><td>C50 12.35/13.20（Δ0.89）</td><td>$1,320</td><td>63.20</td><td class="tr">✗</td></tr>
+  <tr><td>11/20</td><td>70 天</td><td>0</td><td>61.7-62.3%</td><td>C50 13.45/14.30（Δ0.83）</td><td>$1,430</td><td>64.30</td><td class="tr">✗</td></tr>
+  <tr><td><b>12/18</b></td><td>98 天</td><td><b>1（财报窗含 12/2）</b></td><td><b>66-67%（+4~4.5pp 溢价）</b></td><td>C45 17.45/19.30（Δ0.87）</td><td>$1,930</td><td>64.30</td><td class="tr">✗</td></tr>
+  <tr><td><b>1/15/27</b></td><td><b>4.1 月</b></td><td><b>2</b></td><td>64-65%</td><td>C50 15.25/16.35（Δ0.78）/ C45 估 ~17-18</td><td>$1,635+</td><td>66.4+</td><td class="tr">✗</td></tr>
+</table>
+<div class="quote">🧮 <b>怎么读这张表</b>：现价买任何一行，BE 都在 62-67 区=「必须比现在涨得更多才回本」，而估值基准只有 62.5——<b>全部 H4 红灯=当前价位买 CALL 数学上无一行合格</b>。这不是缺陷，是玩法本身：等价格进 B 档（spot~46.9）或锚上移之后，同一张表重算，BE 会整体下沉——<b>那时候才会出现绿行</b>。触发当日必须拉真链重算（本页=推演参考架）。</div>
+</section>
+
+<!-- ============ 3. CSP 侧 ============ -->
+<section id="g3">
+<h2>③ 卖方侧同框（对照） <span class="en">CSP / Engine Side</span></h2>
+<table>
+  <tr><th style="width:190px;">合约</th><th style="width:170px;">实价（bid/ask）</th><th>判定（引擎口径 #25/#26）</th></tr>
+  <tr><td><b>Nov20 P50</b></td><td><b>1.65 / 2.00（mid 1.83·IV 61.7%·OI 5,315）</b></td><td class="tr"><b>＜$2.30 门槛 ✗ 出局</b>——0909 推算 ≈$2.6 系误用 Dec IV 外推，实价证伪；重启条件=spot 回 50-52 带（⑪ L4 前置不变）</td></tr>
+  <tr><td>Dec18 P50</td><td>2.80 / 3.05（IV 66.2%·OI 435）</td><td class="ta">≥$2.30 ✓数学，但 spot≤52 前置 ✗ → 熄火保持；0909 的 3.45/3.75 → -16%（时间衰减+溢价释放）</td></tr>
+  <tr><td>1/15/27 P50（LEAPS）</td><td>3.40 / 3.60（IV 64.2%·OI 1,474·Δ-0.22）</td><td class="tb">卡M G5 期限参考行（实距 4.1 个月·未达 G5 ≥12 月，勘误 #81）；candle 未到触发档，仅建档；<b>勘误#82 后记：2028-1 cycle 无需等——280121 已在架（16.3 月✓✓·C60 2,737/C90 6,550 厚流动性）</b></td></tr>
+  <tr><td>Oct16 P50</td><td>0.68 / 0.88（OI 2,614）</td><td class="tr">出局=数学确定（#49 维持）</td></tr>
+  <tr><td>rotator 周权</td><td>9/18 P50 带外（spot&gt;50）</td><td class="tr">禁（spot&gt;50 规则性禁开）</td></tr>
+</table>
+<div class="quote">⚖ <b>买方与卖方是同一张表的两侧</b>：Nov20 P50 不过线 = 卖方没租金可收 <b>且</b> 买方波动率太贵——六闸里的 G2（W）与引擎门槛（≥$2.30）在数学上是同一件事的两面（权利金=市场对波动的报价）。</div>
+</section>
+
+<!-- ============ 4. 四剧本 ============ -->
+<section id="g4">
+<h2>④ 四剧本 · HPE 接线 <span class="en">Four Plays Wired to the Repo</span></h2>
+<table class="ladder">
+  <tr class="z3"><td>P1 错杀<br><span style="font-size:11px;">edge1+edge2</span></td><td><b>触发</b>：E1-E4 分型（无坏消息普跌/板块拖累/财报误读/宏观流动性）＋跌因闸绿灯＋V≤0.75（<b>触发价 46.9</b>，≈⑪ O2 成交之后）→ <b>动作</b>：G5 期限 ≥12 月——<b>勘误 #82：合格期限已在架（280121=16.3 月✓✓）但触发价 46.9 下全谱 BE=54.4-63.3≫46.9 → H4 数学否决与期限无关 → P1 默认正股执行（加硬）；CALL 复核=（a）spot≤46.9 触发带内 H4 复算过 或（b）IV 降档 W≤40% 或（c）S/A 深档三问降参数（B级）</b>＋ Δ≥0.85 深实值（H2 压波动率税——错杀日 IV 贵，深实值少付时间价值）＋ H3 时间价值/股价≤18% ＋ 分批（对应⑪ L2 节奏）</td></tr>
+  <tr class="z4"><td>P2 事件后<br><span style="font-size:11px;">edge3</span></td><td><b>触发</b>：10-Q（中下旬）或 12/2 财报好但被被动卖盘砸出误杀（PEAD 史：median gap 8.7%、低开高走 7/9）＋ IV crush 已泄 → <b>动作</b>：窗后首日甄别接（10-Q 误杀捕捉的 CALL 版）；财报当月红线不碰 Dec18（66% IV=赛前买保险）</td></tr>
+  <tr class="z5"><td>P3 链滞后<br><span style="font-size:11px;">新增·库内实证</span></td><td><b>触发</b>：同买家链首动 gap、镜像股滞后未动——<b>9/2 DELL → 9/11 HPE 九日时滞实证</b> → <b>动作</b>：镜像基本面已自证（订单/backlog）＋时滞窗 ≤10 日 → 滞后股短中期 CALL；本周反向样本=已走完（HPE 已 gap），下一位镜像=盯 DELL 链新事件</td></tr>
+  <tr class="z6"><td>P4 锚上移<br><span style="font-size:11px;">新增</span></td><td><b>触发</b>：质变/兑现 → 基准上移（12/2 裁决四条=营收 13.9-14.8B/OM≥14%/网络 11-13%/FY27 不下修）→ 雷达整体平移 → <b>动作</b>：锚动=触发价全表重算（原 D 档区域可变 C/B）；<b>锚不动就不追</b>——翻转④重规划时一并议</td></tr>
+</table>
+</section>
+
+<!-- ============ 5. 下单前 checklist ============ -->
+<section id="g5">
+<h2>⑤ 下单前 Checklist <span class="en">Hard Constraints &amp; Red Lines</span></h2>
+<div class="card">
+<ul class="chk">
+  <li><b>H1 到期</b>：≥12 个月（现 regime 标定）→ 只有 1/15/27 LEAPS 及后续 LEAPS 合格</li>
+  <li><b>H2 Delta</b>：Δ≥0.85 深实值——买敞口不买彩票；错杀日 IV 贵，深实值时间价值占比低</li>
+  <li><b>H3 租金</b>：时间价值 ÷ 股价 ≤18%</li>
+  <li><b>H4 盈亏平衡</b>：BE ≤ 基准×0.75（=B 档触发线 46.9，自洽）——估值看错 1/4 以内仍是赚的</li>
+  <li><b>红线</b>：单腿 CALL（禁组合/价差/卖腿）｜不摊平｜V&gt;0.85 禁买｜财报当周/当月不买｜thesis ❌ 一票否决（跌因闸红灯：便宜不是理由，错杀才是）｜权利金全损可接受才做</li>
+  <li><b>资金</b>：先答「这笔 CALL 替代哪一次正股加仓」（G6）——参照尺度=⑪ 资金五层里对应层的预算</li>
+  <li><b>反向借用卖出挂单三问（#75）</b>：①这单属于哪个批（CALL=机动批弹药，不占底仓/T 批）②对表核概率（进档了吗）③认错线（到期前 thesis 检查点）</li>
+  <li><b>触发当日流程</b>（六步，卡M §6）：确认真跌非坏消息 → 321/三支柱复核 → 拉真链（本页数据过期）→ 过 H1-H4 → 规模换算 → 用户拍板 + decision_log 留痕（成交价/Δ/IV/BE/对应加仓/归零预案/对错判据）</li>
+</ul>
+</div>
+</section>
+
+<!-- ============ 6. 磁钉 ============ -->
+<section id="g6">
+<h2>⑥ OI 磁钉带 <span class="en">Magnet Pins（9/11 vs 9/9）</span></h2>
+<table>
+  <tr><th>行权</th><th>9/18</th><th>10/16</th><th>11/20</th><th>12/18</th><th>1/15/27</th><th>读法</th></tr>
+  <tr><td><b>C55</b></td><td>11,947</td><td>7,579</td><td>2,266</td><td><b>8,130</b></td><td>2,311</td><td>回踩第一承接带</td></tr>
+  <tr><td><b>C60</b></td><td>11,412</td><td>6,328</td><td>4,094</td><td><b>7,465（+562）</b></td><td>11,009</td><td><b>三月权合计 ~17.9k 双向增强=60 翻转支撑期权面佐证+1</b></td></tr>
+  <tr><td><b>C70</b></td><td>—</td><td>4,009</td><td>4,825</td><td><b>15,961（全链最大·持平）</b></td><td>2,584</td><td>上方磁钉=兑现方向未变</td></tr>
+</table>
+<p class="card" style="font-size:13px;">P 侧参考：Nov20 P50 OI 5,315 / P47.5 1,523；Oct16 P50 2,614；LEAPS P50 1,474——B 档触发区（46.9）下方的接货盘在缓慢集结。磁钉只说明市场在往哪走，不构成追价理由。</p>
+</section>
+
+<!-- ============ 7. 诚实清单 ============ -->
+<section id="g7">
+<h2>⑦ 诚实清单 <span class="en">Honest Limitations</span></h2>
+<div class="card">
+<ul class="chk">
+  <li>链=9/11 收盘延时口径（周末拉取）；开市日盘中会动——<b>触发当日必须拉真链重算，本页=参考架非报价</b></li>
+  <li>深实值行 CBOE iv=0/垃圾值照 SOP 过滤，代表行 IV 取自相邻实值行；Δ 为 CBOE 模型值</li>
+  <li>恢复分布 n=4（现 regime）样本极小；G5 的 12 个月是<b>最低期限</b>，样本更新即重标定</li>
+  <li>基准口径双列（中枢中值 62.5 主 / #36 EV 59.4 影子）；锚随 10-Q/12-2 重估 → 雷达全表平移</li>
+  <li>10/30 周权 OI&lt;10 未采信；270219 LEAPS 本次只捕到 ITM 段（P50/C70 下次补）</li>
+  <li>本页=玩法与研究推演，非投资建议；规模/张数=用户参数，执行前过第⑤节 checklist 全勾</li>
+</ul>
+</div>
+</section>
+
+<div class="sumcard"><pre>📋 摘要卡 · 期权买方玩法页 20260913（#80）
+├─ 一句话：估值先说便宜（V），波动率再说便宜（W）——六闸全绿才买；HPE 现状 4红1黄1参数 = 现在不买，等表
+├─ 链实价：Nov20 P50 1.65/2.00 ＜$2.30 出局（9/16 议程提前完成）；Dec18 P50 2.80/3.05 过线但 spot≤52 前置✗；LEAPS 1/15/27 P50 3.40/3.60（勘误 #81：4.1 个月未达 G5 ≥12 月——当前无合格 LEAPS 期限）
+├─ IV 结构：Nov 62% / Dec 66%（财报溢价+4~4.5pp 实价量化 #57）；磁钉 55/60/70 保持，C60 三月权 17.9k 双向增强
+├─ 期限阶梯：现价下 H4（BE≤46.9）全红=无一行合格——触发价进 B 档后重算才会出现绿行
+├─ 四剧本：P1 错杀（B≤46.9·LEAPS·Δ0.85）/ P2 事件后（10-Q IV crush）/ P3 链滞后（DELL→HPE 实证）/ P4 锚上移（12/2）
+└─ 纪律：触发当日六步流程+用户拍板+log 留痕；判据源=仓库 #80</pre></div>
+
+<footer>HPE 研究库 · 期权买方玩法页 20260913 · decision_log #80 · 依据：卡M(#79)/链上侦察SOP/⑪机会地图(#69)/窗口制(#25)/AAWS(#26-27)/财报溢价(#57)/翻转④(#24) · 链快照 data/HPE/HPE_options_chain_20260911_cboe_recon.md · 可打印对照</footer>
+</div>
+</body>
+</html>

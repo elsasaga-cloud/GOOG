@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HPE Q3 FY26 全框架深度调查 · 2026-09-03</title>
+<style>
+  :root{
+    --ink:#182230; --sub:#5a6a7e; --bg:#f6f8fa; --card:#ffffff; --line:#e3e9ef;
+    --green:#01a982; --greenbg:#e6f7f2; --amber:#b7791f; --amberbg:#fdf3e3;
+    --red:#c53030; --redbg:#fdeaea; --blue:#2b6cb0; --bluebg:#e8f1fb;
+    --gray:#718096; --graybg:#eef1f5; --gold:#9c6b1e;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif; background:var(--bg); color:var(--ink); line-height:1.75; font-size:15px;}
+  .wrap{max-width:1060px; margin:0 auto; padding:28px 20px 80px;}
+  header.hero{background:linear-gradient(135deg,#0b1f33 0%,#0e3a2f 100%); color:#fff; border-radius:14px; padding:34px 36px; margin-bottom:22px;}
+  header.hero h1{font-size:26px; letter-spacing:.5px; margin-bottom:8px;}
+  header.hero .meta{color:#a8c5bd; font-size:13px; margin-top:10px; line-height:1.9;}
+  .pill{display:inline-block; padding:2px 12px; border-radius:999px; font-size:12.5px; font-weight:600; margin:0 6px 6px 0;}
+  .pill.g{background:var(--greenbg); color:#036e53;} .pill.a{background:var(--amberbg); color:var(--amber);}
+  .pill.r{background:var(--redbg); color:var(--red);} .pill.b{background:var(--bluebg); color:var(--blue);}
+  .pill.n{background:#22435a; color:#9fc6e8;}
+  nav.toc{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 22px; margin-bottom:26px; font-size:13.5px;}
+  nav.toc b{color:var(--sub); font-size:12px; letter-spacing:2px;}
+  nav.toc a{color:var(--ink); text-decoration:none; margin-right:16px; white-space:nowrap; line-height:2.1; border-bottom:1px dotted #b9c6d2;}
+  nav.toc a:hover{color:var(--green);}
+  section{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:26px 30px; margin-bottom:22px;}
+  h2{font-size:19px; margin-bottom:14px; padding-bottom:10px; border-bottom:2px solid var(--green); display:flex; align-items:center; gap:10px;}
+  h2 .no{background:var(--green); color:#fff; font-size:13px; border-radius:6px; padding:1px 9px; font-weight:700;}
+  h3{font-size:15.5px; margin:20px 0 8px; color:#0e3a2f;}
+  p{margin-bottom:10px;}
+  .lead{font-size:15.5px; background:var(--greenbg); border-left:4px solid var(--green); padding:12px 16px; border-radius:0 8px 8px 0; margin-bottom:14px;}
+  table{width:100%; border-collapse:collapse; margin:10px 0 14px; font-size:13.5px;}
+  th{background:#f0f5f4; color:#0e3a2f; text-align:left; padding:8px 10px; border:1px solid var(--line); font-weight:700;}
+  td{padding:7px 10px; border:1px solid var(--line); vertical-align:top;}
+  tr:nth-child(even) td{background:#fbfcfd;}
+  .num{text-align:right; font-variant-numeric:tabular-nums;}
+  .ok{color:var(--green); font-weight:700;} .warn{color:var(--amber); font-weight:700;}
+  .bad{color:var(--red); font-weight:700;} .pend{color:var(--blue); font-weight:700;} .dim{color:var(--sub);}
+  .process{background:#f2f7f6; border:1px dashed #9fc9bd; border-radius:10px; padding:14px 18px; margin:10px 0 14px; font-size:13.5px;}
+  .process b{color:#036e53;}
+  .process .step{display:flex; gap:10px; margin:7px 0;}
+  .process .tag{flex:0 0 64px; text-align:center; background:#0e3a2f; color:#9fe0cd; border-radius:6px; font-size:12px; padding:2px 0; height:fit-content; font-weight:700;}
+  .callout{border-radius:10px; padding:12px 18px; margin:12px 0; font-size:14px;}
+  .callout.green{background:var(--greenbg); border:1px solid #9adbc8;}
+  .callout.amber{background:var(--amberbg); border:1px solid #ecd3a0;}
+  .callout.red{background:var(--redbg); border:1px solid #f3c1c1;}
+  .callout.blue{background:var(--bluebg); border:1px solid #b7d3ee;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:760px){.grid2{grid-template-columns:1fr;}}
+  .timeline{display:flex; gap:0; margin:14px 0 6px; font-size:12.5px; text-align:center;}
+  .timeline .node{flex:1; position:relative; padding-top:26px;}
+  .timeline .node::before{content:""; position:absolute; top:8px; left:0; right:0; height:3px; background:linear-gradient(90deg,#c9d6df,#8fb5a9);}
+  .timeline .dot{position:absolute; top:2px; left:50%; transform:translateX(-50%); width:13px; height:13px; border-radius:50%; background:var(--green); border:2.5px solid #fff; box-shadow:0 0 0 2px #8fb5a9;}
+  .timeline .node.hot .dot{background:var(--red); box-shadow:0 0 0 2px #e3a1a1;}
+  .timeline b{display:block; font-size:13px;}
+  .chiprow{display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 12px;}
+  .chip{background:#f0f5f4; border:1px solid var(--line); border-radius:8px; padding:6px 12px; font-size:13px;}
+  .chip b{color:#0e3a2f;}
+  .matrix{display:grid; grid-template-columns:110px 1fr 1fr; gap:6px; margin:10px 0; font-size:13px;}
+  .matrix div{border-radius:8px; padding:10px 12px; min-height:52px;}
+  .matrix .hd{background:transparent; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--sub); font-size:12.5px; text-align:center;}
+  .mx-hit{background:var(--greenbg); border:2px solid var(--green); font-weight:700;}
+  .mx{background:#f4f6f8; border:1px solid var(--line); color:var(--sub);}
+  footer{color:var(--sub); font-size:12.5px; text-align:center; margin-top:30px; line-height:2;}
+  .kpi{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:12px 0;}
+  .kpi .box{background:#f8fafb; border:1px solid var(--line); border-radius:10px; padding:10px 14px;}
+  .kpi .v{font-size:20px; font-weight:800; color:#0e3a2f; font-variant-numeric:tabular-nums;}
+  .kpi .l{font-size:12px; color:var(--sub);}
+  .small{font-size:12.5px; color:var(--sub);}
+  ul.tight{margin:6px 0 10px 20px;} ul.tight li{margin:4px 0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>HPE Q3 FY26 全框架深度调查报告</h1>
+  <div>
+    <span class="pill n">财报：2026-09-02 盘后</span>
+    <span class="pill g">四硬数字 2✅ 1⚠️ 1⏳</span>
+    <span class="pill a">情景：🟡 达标即跌</span>
+    <span class="pill g">T1-T5 零破坏</span>
+    <span class="pill b">融合矩阵 = 价值区</span>
+    <span class="pill n">321 综合 ≈ 58-63</span>
+  </div>
+  <div class="meta">
+    报告性质：应用户要求，动用仓库<b>全部 10 套框架</b>对财报后 HPE 做穿透式体检（过程+结论全公开）｜ 兼作 SECTION J（Q3 回填 11 步）主载体<br>
+    输入：Q3 官方数字与电话会（9/2 盘后）· 9/2 收盘 $50.49 · 盘后约 $49（用户口径，规矩19）· chip v5.2 首跑（9/2 收盘口径）· 仓库框架正本全套<br>
+    数据来源：investing.com / 247wallst（电话会与幻灯片转述）· CBOE 链（9/1）· 仓库 CSV · 本仓库分析记录<br>
+    入库：commit <code>da821c6</code> · 分支 arena/01a057f3 · PR#3 ｜ 调查执行：Arena Agent
+  </div>
+</header>
+
+<nav class="toc">
+  <b>目录</b><br>
+  <a href="#s0">0 摘要卡</a><a href="#s1">1 时间线与事件底座</a><a href="#s2">2 调查方法：10 套框架清单</a><a href="#s3">3 分析全过程（分框架）</a><a href="#s4">4 结论收敛与判据</a><a href="#s5">5 持仓账本视角</a><a href="#s6">6 本季叙事</a><a href="#s7">7 待补与免责</a>
+</nav>
+
+<!-- ═══════════ 0 摘要卡 ═══════════ -->
+<section id="s0">
+  <h2><span class="no">0</span>摘要卡</h2>
+  <div class="lead">
+    <b>一句话：Q3 是立库以来最强报表——四硬数字 2✅1⚠️1⏳、T1-T5 零破坏、去杠杆提前一年达标解锁 75% FCF 回馈；股价跌是「Q4 利润率 mix + 内存短缺 + 预期打满」的定价问题。</b><br>
+    全框架收敛于同一结论：基本面行进中、趋势粘合、当前 = 47-50 第一档挂单体系生效区——不是追跌区，也不是撤退区。
+  </div>
+  <table>
+    <tr><th style="width:36%">框架</th><th>判定</th></tr>
+    <tr><td>双眼 · 趋势果论之眼</td><td><span class="warn">State X</span>（贴 R8 线 $49.44，未触发）</td></tr>
+    <tr><td>双眼 · 321 基本面之眼</td><td><span class="ok">方向性重估 ↑↑</span>（模块级正式分待本季度包完成）</td></tr>
+    <tr><td>双眼 · 融合矩阵</td><td><span class="ok">价值区</span>（低估+优质 × 粘合）：可研究 / 分批等待</td></tr>
+    <tr><td>321 收敛器</td><td>综合 ≈ <b>58-63</b>（8/16 首跑 57.6）——仍在「观察等待、设分档挂单」带，<b>但性质从"贵而等"变成"好而等位置"</b></td></tr>
+    <tr><td>Thesis T1-T5</td><td><span class="ok">零破坏</span>，两项升格 ✅✅（T3/T5），T4 挂新观察哨</td></tr>
+    <tr><td>作战卡四硬数字</td><td><span class="ok">2✅</span>（营收超上限 / FCF上调）<span class="warn">1⚠️</span>（网络OM 22% 差0.5pp）<span class="pend">1⏳</span>（Q4毛利待核）→ 🟡 分支</td></tr>
+    <tr><td>筹码四维仪 v5.2</td><td><span class="bad">44.1 🔴</span>（财报前读数，主扣分 AVWAP -8.1%）；财报后需重跑刷新</td></tr>
+    <tr><td>期权战术线</td><td>P44/C75 大概率双归零收租；#12 新腿按规矩13作废；下一窗口 9/9</td></tr>
+    <tr><td>深度估值框架①</td><td>$49 ≈ FY27 P/E 10.7-11.1x + FCF yield ≥7.5%：定价隐含"增长持续 + margin平台期"</td></tr>
+    <tr><td>25步综合框架②</td><td><span class="ok">质量仪表全面向上</span>（杠杆/现金流/毛利/订单），方向评级提升（精算待补）</td></tr>
+    <tr><td>成长红利框架③</td><td>8/16 = 57分 B级 → 方向升入 <span class="ok">B+ 区（~65）</span>（待模块重算）</td></tr>
+  </table>
+</section>
+
+<!-- ═══════════ 1 时间线与事件底座 ═══════════ -->
+<section id="s1">
+  <h2><span class="no">1</span>时间线与事件底座</h2>
+
+  <h3>1.1 本轮行情与决策时间线</h3>
+  <div class="timeline">
+    <div class="node"><span class="dot"></span><b>8/16</b>$58.71<br><span class="dim">321首跑57.6<br>"基本合理偏高→空仓等待"</span></div>
+    <div class="node"><span class="dot"></span><b>8/31</b>$52.31<br><span class="dim">入观察哨$52-55<br>财报前体检</span></div>
+    <div class="node"><span class="dot"></span><b>9/1</b>$50.87<br><span class="dim">破MA30→State X<br>DELL财报爆表</span></div>
+    <div class="node"><span class="dot"></span><b>9/2</b>$50.49<br><span class="dim">#12四档卖腿预案<br>chip v5.2首跑</span></div>
+    <div class="node hot"><span class="dot"></span><b>盘后 ~$49</b><br><span class="dim">Q3揭盅 beat+raise<br>仍 -5.4% 🟡</span></div>
+  </div>
+
+  <h3>1.2 Q3 FY26 实际 vs 预期 vs 指引</h3>
+  <table>
+    <tr><th>指标</th><th class="num">实际</th><th>预期 / 此前指引</th><th>差</th></tr>
+    <tr><td>营收</td><td class="num"><b>$12.21B</b>（+34% yoy）</td><td>$11.91-11.93B；指引 $11.5-12.1B</td><td class="ok">超指引上限</td></tr>
+    <tr><td>Non-GAAP EPS</td><td class="num"><b>$1.11</b>（+152%）</td><td>$0.92-0.93；指引 $0.88-0.93</td><td class="ok">beat ~19%，史上首个 $1+ 季度</td></tr>
+    <tr><td>Non-GAAP 毛利率</td><td class="num"><b>40.4%</b>（+10.5pp）</td><td>—</td><td class="ok">大超</td></tr>
+    <tr><td>经营利润</td><td class="num"><b>$2.0B</b>（OM 16.2%）</td><td>—</td><td class="ok">纪录，+290bps qoq</td></tr>
+    <tr><td>FCF</td><td class="num"><b>$958M</b></td><td>—</td><td class="ok">Q3 史高；YTD $2.6B</td></tr>
+    <tr><td>网络分部</td><td class="num">$2.9B（+75%/+10% normal）<br>OM <b>22%</b>；订单 +36%</td><td>内部线 OM 22.5%+</td><td><span class="warn">⚠️ 差 0.5pp</span>（管理层称符合指引）</td></tr>
+    <tr><td>Cloud &amp; AI</td><td class="num">$9.0B（+25%）<br>OM 17%（+460bps）</td><td>—</td><td class="ok">分部利润 $1.5B 纪录</td></tr>
+    <tr><td>AI 订单/backlog</td><td class="num">订单 $3.1B<br>backlog <b>$7.6B</b></td><td>—</td><td class="ok">纪录；盘后 $3.5B 推理大单 + Oracle 合作</td></tr>
+    <tr><td>净杠杆</td><td class="num"><b>1.8x</b></td><td>目标 2.0x 原计划 FY27</td><td class="ok">提前一年达标</td></tr>
+    <tr><td>FY26 指引</td><td class="num">EPS <b>$3.75-3.85</b>（+$0.40）<br>FCF <b>≥$3.75B</b></td><td>EPS $3.35-3.45、FCF ≥$3.5B</td><td class="ok">raise</td></tr>
+    <tr><td>Q4 指引</td><td class="num">营收 $13.9-14.8B<br>EPS $1.20-1.30<br>公司 OM <b>14-15%</b>（回落）</td><td>—</td><td><span class="bad">跌因核心</span>：AI mix 摊薄 + 内存瓶颈</td></tr>
+    <tr><td>FY27 框架</td><td class="num">EPS <b>$4.40-4.60</b>（+16-20%）<br>FCF <b>≥$5.0B</b></td><td>首次给出</td><td class="ok">长期锚上移</td></tr>
+  </table>
+
+  <h3>1.3 那为什么跌？（-5.4% 归因）</h3>
+  <div class="chiprow">
+    <div class="chip">① <b>Q4 利润率指引回落</b>：管理层亲口承认 OM 14-15%（AI mix + pricing）——卖方最怕的"主动承认"</div>
+    <div class="chip">② <b>内存短缺坐实</b>：DDR5/DDR4/NAND/晶圆限制订单→收入转化（订单 +42% vs 收入 +34% 缺口摆在那）</div>
+    <div class="chip">③ <b>预期打太满</b>：YTD +120%、共识 90 天上修 62%、"Street sits above the top of guided range"——完美定价下 beat 也得吐</div>
+    <div class="chip">④ <b>利率扰动</b>：美债收益率上行压制科技股</div>
+  </div>
+  <div class="callout green">
+    <b>为什么"跌 ≠ 差"：</b>本季营收、EPS、毛利、经营利润、AI backlog 五项纪录，指引全线 raise。跌的是<b>定价</b>（为完美定价的市场不付账），不是<b>基本面</b>（趋势眼框架第八果：涨多会跌，跌不证伪）。这一判定贯穿全部后续框架。
+  </div>
+</section>
+
+<!-- ═══════════ 2 方法论 ═══════════ -->
+<section id="s2">
+  <h2><span class="no">2</span>调查方法：10 套框架怎么跑的</h2>
+  <p>仓库要求"两眼先各自独立完成，再进融合矩阵；冲突时不选边"。本次执行顺序：<b>①事实底座 → ②红线扫描 → ③作战卡四硬数字 → ④趋势眼独立跑 → ⑤基本面眼独立跑（thesis 逐条+三个估值框架）→ ⑥量化眼（四维仪+期权线）→ ⑦融合矩阵 → ⑧321 收敛 → ⑨判据与行动信号</b>。每一步的输入、推理、判定全部留痕如下。</p>
+  <table>
+    <tr><th>#</th><th>框架</th><th>看什么</th><th>数据源</th><th>本次输出</th></tr>
+    <tr><td>1</td><td>双眼·趋势果论之眼</td><td>State 判定、八果信号、MA 结构、量价</td><td>日线（chip v5.2 / 仓库 CSV）</td><td>State X 粘合</td></tr>
+    <tr><td>2</td><td>双眼·321 基本面之眼</td><td>三大证据交叉验证</td><td>电话会+财报数字+估值</td><td>方向 ↑↑</td></tr>
+    <tr><td>3</td><td>321 收敛器</td><td>分析50/量化30/预期20 加权+保守化</td><td>①②⑦⑧⑨输出</td><td>≈58-63</td></tr>
+    <tr><td>4</td><td>融合矩阵</td><td>基本面 × 果论 四象限</td><td>两眼结论</td><td>价值区</td></tr>
+    <tr><td>5</td><td>Thesis T1-T5 追踪</td><td>论点 vs 破坏线</td><td>分部数据/FCF/杠杆</td><td>零破坏</td></tr>
+    <tr><td>6</td><td>作战卡（四硬数字+四情景）</td><td>财报执行纪律</td><td>Q3 实际数字</td><td>🟡 分支</td></tr>
+    <tr><td>7</td><td>红线 R1-R7</td><td>结构性缺陷一票扣分</td><td>杠杆/商誉/现金流</td><td>仅 R6 在案</td></tr>
+    <tr><td>8</td><td>筹码四维仪 v5.2</td><td>VP/AVWAP/IV/13F/空头内部人 加权</td><td>Yahoo 全链（BSM自算IV）</td><td>44.1（财报前口径）</td></tr>
+    <tr><td>9</td><td>期权战术线</td><td>在场腿+事件腿纪律</td><td>positions.py + 链</td><td>#12作废/双腿结算</td></tr>
+    <tr><td>10</td><td>三个独立估值框架 ①②③</td><td>隐含预期/25步质量仪表/成长红利三轮</td><td>指引+市值+分部利润</td><td>11x·7.5% / 仪表↑ / B+</td></tr>
+  </table>
+  <p class="small">框架正本：docs/FRAMEWORK_TWO_EYES.md · docs/METHODOLOGY.md · docs/HPE_LONG_TERM_TRACKING_FRAMEWORK.md（§J/§K）· thesis.md · docs/frameworks/1-3。全程依据宪法：历史只追加不删、缺失标"待补"不伪造、每判定附对错判据。</p>
+</section>
+
+<!-- ═══════════ 3 分析全过程 ═══════════ -->
+<section id="s3">
+  <h2><span class="no">3</span>分析全过程（按执行顺序）</h2>
+
+  <!-- 3.1 红线 -->
+  <h3>3.1 第一步 · 红线扫描（R1-R7）</h3>
+  <div class="process">
+    <div class="step"><span class="tag">输入</span><span>Q3 电话会数字（杠杆/OCF）、仓库红线基线（8/16 建立：R6 商誉/净资产≈96%）、R3 旧值 3.3x</span></div>
+    <div class="step"><span class="tag">推理</span><span>逐条对触发条件：R3 净债/EBITDA&gt;5x？实际 <b>1.8x</b>（3.3x→2.3x→1.8x）历史最优；R4 经营现金流连续两年负？Q3 OCF $1.6B，证伪；R6 商誉/净资产&gt;60%？Juniper 并表后仍 ~96%（待 10-Q 更新）——<b>继续触发</b>，按框架② -4 / 框架③ -5 计。</span></div>
+    <div class="step"><span class="tag">判定</span><span>仅 R6 在案（老朋友，非新伤）；R3 由扣分阴影转为质量加分项。</span></div>
+  </div>
+  <table>
+    <tr><th>红线</th><th>状态</th><th>备注</th></tr>
+    <tr><td>R1 造假嫌疑</td><td class="ok">未触发</td><td>M-Score 基线不变</td></tr>
+    <tr><td>R2 审计非标</td><td class="ok">未触发</td><td>—</td></tr>
+    <tr><td>R3 净债/EBITDA&gt;5x</td><td class="ok">远未触发</td><td><b>1.8x</b>（提前一年达标）</td></tr>
+    <tr><td>R4 OCF 连续2年为负</td><td class="ok">未触发</td><td>Q3 OCF $1.6B</td></tr>
+    <tr><td>R5 SBC/营收&gt;15%</td><td class="ok">未触发</td><td>~2% 量级</td></tr>
+    <tr><td><b>R6 商誉/净资产&gt;60%</b></td><td class="warn"><b>仍触发（96%）</b></td><td>-4（框架②）/ -5（框架③）；10-Q 后更新</td></tr>
+    <tr><td>R7 重大诉讼</td><td class="ok">未触发</td><td>DOJ 已和解</td></tr>
+  </table>
+
+  <!-- 3.2 四硬数字 -->
+  <h3>3.2 第二步 · 作战卡四硬数字裁决</h3>
+  <div class="process">
+    <div class="step"><span class="tag">输入</span><span>作战卡 8/31 预注册的四个数字（财报前写入、不可事后改）</span></div>
+    <div class="step"><span class="tag">推理</span><span>逐条比对实际值：营收是否落 $11.5-12.1B？实际 $12.21B <b>超上限</b>（比达标更强）；网络 OM 回升 22.5%+？实际 22%（管理层称"符合指引"，与内部线差 0.5pp——记 ⚠️ 不记 ❌，因远高于 20% 破坏线且 Q2 是 21.6%，止住连降）；FCF 维持 ≥$3.5B？<b>上调至 ≥$3.75B</b>；Q4 毛利不被内存拖&lt;34%？本季 40.4% 纪录，但电话会承认 Q4 mix 回落——确切数待官方 release。</span></div>
+    <div class="step"><span class="tag">判定</span><span>2✅ + 1⚠️ + 1⏳ → 映射作战卡四情景 = <b>🟡 达标即跌</b>（非 🟠：无瑕疵报告；非 🔴：未砸穿 $47）。🟡 分支动作 = 下探 47-50 按第一档清单核查。</span></div>
+  </div>
+
+  <!-- 3.3 SECTION J -->
+  <h3>3.3 第三步 · SECTION J 十一步映射</h3>
+  <table>
+    <tr><th>#</th><th>步骤</th><th>状态/落点</th></tr>
+    <tr><td>1</td><td>红线扫描</td><td class="ok">完成（§3.1）</td></tr>
+    <tr><td>2</td><td>Q3 四个关键数字</td><td class="ok">完成（§3.2）</td></tr>
+    <tr><td>3</td><td>Juniper 并表桥接</td><td class="ok">报告口径+75% / normal+10% 差异即桥接本体；FY27 起 normal 为主。<span class="dim">bridge 表待 10-Q</span></td></tr>
+    <tr><td>4</td><td>AI订单/网络/GreenLake</td><td class="ok">AI backlog $7.6B、N4A 累计 $2.2B（目标上调 $2.5-3.0B）；<span class="dim">GreenLake 待补</span></td></tr>
+    <tr><td>5</td><td>FCF/债务/ROIC</td><td class="ok">$958M/YTD $2.6B；净债 $14B、opco $3.2B、1.8x；<span class="dim">ROIC 待补</span></td></tr>
+    <tr><td>6</td><td>有机增长与利润质量</td><td class="ok">normal +21-23%（FY26）、13-17%（FY27）；毛利扩张=定价纪律+网络mix，非一次性。<span class="dim">FY27 口径差（13-17 vs 14-17）待官方 release 仲裁</span></td></tr>
+    <tr><td>7</td><td>估值与隐含预期</td><td class="ok">见 §3.8（FY27 P/E 11x / FCF yield 7.5%）</td></tr>
+    <tr><td>8</td><td>T1-T5 状态</td><td class="ok">见 §3.5（零破坏）</td></tr>
+    <tr><td>9</td><td>行动信号扫描</td><td class="ok">见 §4.3 时序表</td></tr>
+    <tr><td>10</td><td>≤200字叙事</td><td class="ok">见 §6</td></tr>
+    <tr><td>11</td><td>写入 decision_log</td><td class="ok">#14 已入账；#3/#6/#8/#12 判据回填完成</td></tr>
+  </table>
+
+  <!-- 3.4 趋势眼 -->
+  <h3>3.4 第四步 · 趋势果论之眼（独立输出）</h3>
+  <div class="process">
+    <div class="step"><span class="tag">输入</span><span>chip v5.2 首跑执行层：MA20/30/60 = 54.31 / 52.36 / 49.44；ATR14 $2.65（5.2%）；20日高/低 63.44 / 49.12；9/2 收盘 50.49；盘后 ~49（用户口径）</span></div>
+    <div class="step"><span class="tag">推理</span><span>50.49 &lt; MA30 → State 3 失守延续为 <b>State X</b>；但 49 尚未"收盘跌破" MA60 $49.44（R8 线）——R8 是<b>双条件</b>：收盘跌破 49.44 <b>且</b> 爆量阴线（≥1.3x 量、≥1.5% 幅），缺一不可，判定时点=9/3 美股常规时段（北京 9/4 凌晨）。位置：自 8/13 高点回撤 ~22%，回吐 6/1 财报 gap 大部，但恰回到 6/2 前平台（47-50 = AVWAP-2 中枢带）。</span></div>
+    <div class="step"><span class="tag">判定</span><span><b>粘合</b>（非多头：MA20/30 压制；非空头确认：MA60 未收盘破 + 基本面反向增强）。</span></div>
+    <div class="step"><span class="tag">判据</span><span>9/3 收盘 ≥49.44 或未爆量 → R8 解除、State X 观察；收盘 &lt;49.44 + 爆量阴线 → R8 触发、趋势眼降级、第二档 41-45 讨论才提上日程。</span></div>
+  </div>
+  <div class="kpi">
+    <div class="box"><div class="v">State X</div><div class="l">趋势状态（站回 52.36 才恢复 State 3）</div></div>
+    <div class="box"><div class="v">$49.44</div><div class="l">R8 线 = MA60（今夜判定）</div></div>
+    <div class="box"><div class="v">$2.65</div><div class="l">ATR14（挂单间隔 0.5×≈$1.32 / 止损 1×）</div></div>
+    <div class="box"><div class="v">63.44 / 49.12</div><div class="l">20日高/低（盘后价正贴 20日低）</div></div>
+  </div>
+
+  <!-- 3.5 thesis -->
+  <h3>3.5 第五步 · Thesis T1-T5 逐条核查（基本面眼·上）</h3>
+  <div class="process">
+    <div class="step"><span class="tag">输入</span><span>thesis.md 正本五条论点+破坏线（8/16 立库，不自动改状态）；本季分部数据、FCF、杠杆、指引</span></div>
+    <div class="step"><span class="tag">推理</span><span>逐条"证据 vs 破坏线"对照（下表）。关键裁量两处：①T1 网络OM 22% vs 内部回升线 22.5%——差 0.5pp 但管理层称符合其指引、且远高于"连续2季&lt;20%"的破坏线，记 ⚠️→建议 ✅；②T4 本季毛利纪录级，但 Q4 指引公司 OM 14-15%、C&amp;AI ~13%——AI mix 摊薄开启，挂<b>新观察哨</b>而非降级。</span></div>
+    <div class="step"><span class="tag">判定</span><span><b>零破坏，全线增强</b>——立库以来最强一季。thesis.md 不自动动（规矩10），重打分建议待用户点头。</span></div>
+  </div>
+  <table>
+    <tr><th>论点</th><th>破坏线</th><th>本季证据</th><th>建议</th></tr>
+    <tr><td><b>T1★</b> Juniper 协同，网络=利润引擎</td><td>连续 2 季 &lt;20%</td><td>OM 23.7 → 21.6 → <b>22%</b>（止住连降）；FY27 指引 mid-high 20s；Oracle 全球 AI 数据中心采用 Juniper 平台；订单 +36%</td><td class="ok">⚠️→✅</td></tr>
+    <tr><td>T2 有机增速站稳双位数</td><td>normal &lt;5%</td><td>FY26 normal +21-23%；FY27 框架 +13-17%（"供应 Q4 起跟上订单"）</td><td class="ok">➖→✅</td></tr>
+    <tr><td>T3 FCF 转型兑现</td><td>FY26 &lt;$3B</td><td>Q3 史高 $958M；FY26 上调 ≥$3.75B；<b>FY27 ≥$5.0B</b></td><td class="ok">✅→✅✅</td></tr>
+    <tr><td>T4 AI 订单持续不牺牲毛利</td><td>GM&lt;33% 且订单环比降</td><td>GM 40.4%（+10.5pp）+ AI 订单纪录——本季反证；<b>但 Q4 mix 摊薄开启</b>（公司 OM 14-15%、C&amp;AI ~13%）</td><td class="warn">✅（挂观察哨）</td></tr>
+    <tr><td>T5 去杠杆</td><td>升破 4x</td><td><b>1.8x 提前一年达标</b>；出售 Telco、偿 $1.25B 票据；解锁 <b>75% FCF 回馈</b>政策</td><td class="ok">➖→✅✅</td></tr>
+  </table>
+  <div class="callout amber"><b>空头论点核对：</b>S1/S4（AI 只是转售毛利薄、内存成本）部分应验为「Q4 mix 摊薄」——但管理层同时给出网络 OM 升档对冲，属"可管理的稀释"而非证伪。<b>升级条件</b>：Q4 公司 OM &lt;14% 或网络 OM 跌出 mid-high 20s → T4 观察哨转 ⚠️；内存涨价引发传统服务器订单环比转负 → S4 升级、重估第二档。</div>
+
+  <!-- 3.6-3.7 -->
+  <h3>3.6 第六步 · 三个独立估值框架（基本面眼·下）</h3>
+  <div class="process">
+    <div class="step"><span class="tag">输入</span><span>FY26 EPS $3.75-3.85 / FY27 $4.40-4.60；FCF $3.75B / $5.0B；市值 ~$66B（@49，股数 ~1.36B）；R6 扣分规则；8/16 基准分（框架③ = 57，321 = 57.6）</span></div>
+    <div class="step"><span class="tag">推理①隐含预期</span><span>$49 ≈ FY26 P/E 12.7-13.1x、<b>FY27 P/E 10.7-11.1x</b>。对照：网络纯玩家 20x+、AI 服务器（DELL）12-14x、HPE 自身 5 年带 8-12x → 市场定价="AI 增长真实但毛利向历史回归，不给网络溢价"。<b>FCF 锚</b>：FY26 yield 5.6% → FY27 <b>7.5%+</b>；75% 回馈 ≈ 年 5.6% 股东回报——"不靠倍数扩张也拿得住"的底。<b>预期差</b>：共识 PT $69.44（18 家）；FY27 中值 $4.50×13x=$58.5，×15x=$67.5；<b>下行数学锚</b> 11x×$4.10≈$45 = 第二档带上沿（档位设计与估值互洽）。</span></div>
+    <div class="step"><span class="tag">推理②25步质量仪表</span><span>DuPont：净利率驱动（OM 16.2% +290bps）而非杠杆驱动（杠杆反降）——质量型改善；F-Score 方向 7-9/9（盈利↑、杠杆↓、毛利↑、周转↑，精算待 10-Q）；Rule of 40 ≈ 50（34+16.2）；五力：Juniper 后网络提价能力实证（订单+36% &gt; 收入+10% normal），上游内存供应商力量是真实威胁；逆向 DCF 方向：当前价仅需 FY27 FCF 兑现 ~60%（建模待季度包）。</span></div>
+    <div class="step"><span class="tag">推理③成长红利三轮</span><span>成长轮 ↑↑（指引上调+backlog 纪录+盘后大单）；分红轮 ↑（75% FCF 回馈自 Q4 启动，分红覆盖 ~5x，回购空间）；估值轮 中性（11-13x 对双位数成长不再苛刻）。R6 扣 5 后方向 <b>B+（~65）</b>，对比 8/16 的 57。</span></div>
+    <div class="step"><span class="tag">判定</span><span>三套独立框架同向：优质程度显著上台阶，价格回到"合理成长"区间下沿；唯一在案扣分 = R6 商誉。</span></div>
+    <div class="step"><span class="tag">判据</span><span>财报后一周卖方 PT 中枢 ≥$65 → 预期差存活；&lt;$55 → 市场在砍 FY27 可信度，重检。框架③正式重算 &lt;60 → 成长质量扣分项比方向更重，第二档权重上调。</span></div>
+  </div>
+
+  <h3>3.7 第七步 · 筹码四维仪 v5.2（量化眼·上）</h3>
+  <div class="process">
+    <div class="step"><span class="tag">输入</span><span>9/2 收盘口径首跑（财报前最后读数）：综合 44.1；分项 VP 54.9 / AVWAP 13.9 / IV 47.5 / 13F 75 / 空头+内部人 62.5；IV 近月 261%（BSM 自算，parity 自洽）；隐含Move ±10.9%；GEX +2.08M 正（pin K53/K49）；做空 5.12%（-8.5% 撤退）；13F 前 10 大 44.8%（Elliott 2.44% 在场）</span></div>
+    <div class="step"><span class="tag">推理</span><span>主扣分=价格跌破 8/12 大涨日 AVWAP -8.1%（得 13.9/100）+ VP 安全垫仅 +2.5%；IV 项扣分含 261% 事件定价——<b>财报后自动修复项</b>。13F 压舱（Elliott 在场+空头撤退=聪明钱不慌）。</span></div>
+    <div class="step"><span class="tag">判定</span><span>44.1 = 偏弱警惕带（≥40&lt;54）——<b>位置风险主导</b>，非筹码崩坏。需财报后重跑刷新。</span></div>
+    <div class="step"><span class="tag">判据</span><span>重跑 ≥55 → 筹码层不再拖 321 后腿；仍 &lt;45 → 位置风险主导，第一档执行价向 47 靠而非 50。</span></div>
+  </div>
+  <div class="callout green"><b>期权市场判读（事件复盘）：</b>隐含Move ±10.9% vs 实际 gap -5.4% —— 恐惧比现实贵一倍，<b>卖方胜</b>（PEAD 6 季：平均|gap| 12.0%，本次在均值内）。IV 261% 现在开始崩塌，P44 保费稳了。期限结构 261→102→75 为教科书事件波。</div>
+
+  <h3>3.8 第八步 · 期权战术线复盘（量化眼·下）</h3>
+  <div class="process">
+    <div class="step"><span class="tag">过程</span><span>#12 完整生命周期：财报前四档比选（P50/51/52/53，agent 排序 P52≳P51&gt;P50≫P53）→ 执行前提="卖 OTM 收事件溢价" → 盘后 -5.4% 穿 52/51/50 全部备选档 → 前提消失 → <b>按用户自立的规矩13（CSP 跌穿行权价→预案作废）作废</b>，非 agent 心软。</span></div>
+    <div class="step"><span class="tag">在场腿</span><span>P44：$49 下安全垫 ~11%，大概率归零收租（theta+crash 双吃，9/4 结算）；C75：深度价外归零。<b>8/24 建立的对骑劫结构以最小代价穿过财报</b>。</span></div>
+    <div class="step"><span class="tag">纪律复盘</span><span>财报前不开新腿硬规则（规矩14）再次证明正确；🟡 分支"让行权"空转（无新腿在场）；#11 400 股弹性条款继续备用。</span></div>
+    <div class="step"><span class="tag">下一步</span><span><b>9/9（周三主操作日）</b>窗口重开：基于 HPE 自身数字重评新 CSP；若趋势眼仍粘合，9/18 到期 P47.5-48 带（第一档期权化）为结构性候选——仅备案，届时按当时价重核。</span></div>
+  </div>
+
+  <h3>3.9 第九步 · 相对强弱与 DELL 对标</h3>
+  <ul class="tight">
+    <li>RPS（9/2 口径）：30日 vs SOXX <b>+17.1pct</b>（HPE +11.9 vs SOXX -5.2）但 RS 趋势下降（动能减弱）；vs SPY 当次拉取失败待重跑。</li>
+    <li>DELL 链：backlog $95B vs HPE $7.6B（量级差=商业模式差：走量 vs 网络+精选AI）；DELL 8/28 财报后亦回调——<b>"达标即跌"是服务器双雄共性，非 HPE 独有瑕疵</b>。</li>
+    <li><b>判据</b>：9/4-9/5 RPS 维持 &gt;+10pct → "强势股回调"定性成立；跌破 +5pct → 升级"跟随板块补跌"。</li>
+  </ul>
+
+  <h3>3.10 第十步 · 风险登记册（本季更新）</h3>
+  <table>
+    <tr><th>风险</th><th>变化</th><th>观察哨</th></tr>
+    <tr><td><b>① 内存超级周期</b></td><td class="warn">新升头号</td><td>DDR5/4、NAND、晶圆限制转化（42% vs 34% 缺口）；Q4 传统服务器订单环比、管理层定价语言；客户对涨价的退缩迹象</td></tr>
+    <tr><td>② AI mix 摊薄</td><td>= 结构性</td><td><b>Q4 公司 OM 守 14-15%？</b>（T4 判决线，12月初）</td></tr>
+    <tr><td>③ 估值波动</td><td>=</td><td>YTD 仍 +90%+，±10% 事件波动是常态（本次在 PEAD 均值内）</td></tr>
+    <tr><td>④ R6 商誉</td><td>= 长尾</td><td>Juniper 商誉/净资产 ~96%；T1 破坏即触发审视</td></tr>
+  </table>
+</section>
+
+<!-- ═══════════ 4 结论 ═══════════ -->
+<section id="s4">
+  <h2><span class="no">4</span>结论收敛、融合矩阵与判据</h2>
+
+  <h3>4.1 融合矩阵定位</h3>
+  <div class="matrix">
+    <div class="hd">基本面＼果论</div><div class="hd">多头结构</div><div class="hd">粘合 / 空头</div>
+    <div class="hd">低估+优质</div><div class="mx">★ 共振区<br>价值和趋势同时支持</div><div class="mx mx-hit">✅ 当前落点：价值区<br>可研究 / 分批等待催化<br><span class="small">（= thesis 第一档 $47-50 互锁）</span></div>
+    <div class="hd">高估/水分大</div><div class="mx">⚠️ 警惕区<br>趋势强但价格虚<br><span class="small">（8/16-9/2 曾在此带）</span></div><div class="mx">回避区</div>
+  </div>
+  <p class="small">为什么不是共振区：趋势未确认（State X）。为什么脱离警惕区：价格已从 63.44 回撤 22%，虚胖挤掉大半，且 321 分析层证据全面增强。</p>
+
+  <h3>4.2 321 收敛推演（过程）</h3>
+  <table>
+    <tr><th>层</th><th>权重</th><th class="num">8/16 基准</th><th class="num">本次</th><th>推演理由</th></tr>
+    <tr><td>分析层</td><td>50%</td><td class="num">54.3</td><td class="num"><b>~70</b></td><td>T1-T5 全线增强 + 两个 ✅✅ + FY27 框架落地；模块级正式分待季度包；R6 仍扣</td></tr>
+    <tr><td>量化层</td><td>30%</td><td class="num">58</td><td class="num"><b>~45-50</b></td><td>四维仪 44.1（财报前）+ State X + 贴 20日低；财报后重跑再校</td></tr>
+    <tr><td>预期层</td><td>20%</td><td class="num">—</td><td class="num"><b>~65</b></td><td>beat+raise 落地、PT $69 vs 价 $49；"预期打满"教训记入（只校准目标位，不推翻前两层）</td></tr>
+    <tr><td><b>综合</b></td><td>—</td><td class="num">57.6</td><td class="num"><b>≈58-63</b></td><td><b>仍在「基本合理偏高：观察等待、设分档挂单」操作带</b></td></tr>
+  </table>
+  <div class="callout blue"><b>关键洞察：分数没大涨，但性质变了。</b>8/16 的 57.6 =「平庸成绩单 + 贵」；现在的 58-63 =「强成绩单 + 等回调到位」。约束从分析层挪到量化层（位置），而这正是分档挂单体系的设计场景。保守化原则核验：分析层与量化层方向分歧 → 按保守侧执行 = 「继续跟踪 + 等待更好位置」，而非折中建仓——与第一档纪律一致。</div>
+
+  <h3>4.3 对错判据汇总（全部前瞻判定）</h3>
+  <table>
+    <tr><th>判定</th><th>判据</th><th>时限</th></tr>
+    <tr><td>"跌是定价问题非基本面问题"</td><td>Q4 公司 OM ≥14% 且 FY27 指引不下修</td><td>Q4 财报（12月初）</td></tr>
+    <tr><td>卖方预期差存活</td><td>PT 中枢 ≥$65</td><td>一周内</td></tr>
+    <tr><td>第一档成立</td><td>47-50 内 + 清单全绿（已预核 ✅）+ 等 1 交易日（已满足）+ 财报窗解禁</td><td><b>9/9 起</b></td></tr>
+    <tr><td>R8 不触发</td><td>9/3 收盘 ≥49.44 或未爆量阴线</td><td>北京 9/4 凌晨</td></tr>
+    <tr><td>P44 归零收租</td><td>9/4 到期 HPE &gt; $44</td><td>9/4</td></tr>
+    <tr><td>T4 观察哨解除</td><td>Q4 公司 OM ≥14%</td><td>12月初</td></tr>
+    <tr><td>"强势股回调"定性</td><td>30日 RPS vs SOXX 维持 &gt;+10pct</td><td>9/4-9/5</td></tr>
+  </table>
+
+  <h3>4.4 行动信号时序</h3>
+  <table>
+    <tr><th>时点</th><th>信号</th><th>动作预案</th></tr>
+    <tr><td>9/3 美股收盘（北京 9/4 凌晨）</td><td>R8 双条件判定</td><td>触发 → 趋势眼降级备案；未触发 → State X 持续观察</td></tr>
+    <tr><td>9/4</td><td>P44 / C75 到期结算</td><td>更新 positions.py（大概率双归零，200 股不变、$4,400 担保释放）</td></tr>
+    <tr><td>9/9（周三）起</td><td>价格在 47-50</td><td><b>第一档执行窗口开启</b>（财报窗禁新仓至 9/9 解禁＋等 1 交易日已满足；清单预核全绿）；40% 仓位纪律用户自决</td></tr>
+    <tr><td>9/9（周三）</td><td>窗口重开</td><td>新 CSP 评估（基于 HPE 自身数字）；chip v5.2 财报后重跑</td></tr>
+    <tr><td>12月初</td><td>Q4 财报 = T4 判决线</td><td>OM ≥14% → 观察哨解除；&lt;14% → T4 转 ⚠️、重估第二档</td></tr>
+  </table>
+</section>
+
+<!-- ═══════════ 5 持仓 ═══════════ -->
+<section id="s5">
+  <h2><span class="no">5</span>持仓账本视角（用户口径为准）</h2>
+  <table>
+    <tr><th>项</th><th>现状</th><th>说明</th></tr>
+    <tr><td>正股</td><td><b>200 股</b>，合并成本 ~$21.15（positions.py 21.1525）</td><td>@$49 → 浮盈 ~+132%；用户定位=<b>长期拿</b>，财报结果"问题不大"（9/3 口述）</td></tr>
+    <tr><td>P44（9/4 到期）</td><td>空头，大概率归零</td><td>安全垫 ~11%，收租+吃 crash 双赢</td></tr>
+    <tr><td>C75（9/4 到期）</td><td>空头，归零</td><td>深度价外</td></tr>
+    <tr><td>#12 新腿</td><td><b>已作废</b></td><td>规矩13：盘后穿全部备选 K（52/51/50）</td></tr>
+    <tr><td>47-50 第一档</td><td>生效区（执行窗口 9/9 起）</td><td>thesis 预注册：40% 仓位、清单全绿（已预核）、财报窗±7天禁新仓至 9/9 解禁——<b>用户自决</b>，agent 不代拍板</td></tr>
+    <tr><td>400 股弹性</td><td>备用条款</td><td>#11：用户放宽的临时上限（加权 ~$25.2、担保 ~$9,400）；反弹 $45± 减 100 股回 300</td></tr>
+  </table>
+  <div class="callout amber"><b>给长期拿的人的三行重点：</b>① T1-T5 零破坏；② FY27 锚从 EPS ~$2.9 抬到 ~$4.5（P/E 11x + FCF yield 7.5% + 年 5.6% 股东回报）；③ 判决线 = 12 月初 Q4 公司 OM ≥14%。这期间的一切波动，都是这条判决线的噪音。</div>
+</section>
+
+<!-- ═══════════ 6 叙事 ═══════════ -->
+<section id="s6">
+  <h2><span class="no">6</span>本季综合叙事（SECTION J 第 10 步，≤200字）</h2>
+  <div class="lead" style="font-size:15px;">
+    Q3 是 HPE 转型叙事的兑现季：营收、EPS、毛利、经营利润、AI backlog 五项纪录，净杠杆提前一年达标解锁 75% FCF 回馈——"重估故事"的第二幕（利润化+回报化）正式开演。股价下跌只说明市场为完美定价，不为卓越付账；Q4 利润率 mix 回落与内存瓶颈是真实的边际逆风，但网络利润率升档与 FY27 框架（EPS $4.40-4.60 / FCF $5B）把长期锚抬高了。全框架收敛：基本面优质且不再贵，趋势粘合未确认，位置回到 47-50 第一档——这是设计中的"等好公司回到计划价位"，不是灾难，也不是信号。
+  </div>
+</section>
+
+<!-- ═══════════ 7 待补 ═══════════ -->
+<section id="s7">
+  <h2><span class="no">7</span>待补清单与数据来源</h2>
+  <ul class="tight">
+    <li>GreenLake/ARR、ROIC、分部 bridge、10-Q 商誉比 → 官方 release / 10-Q 归档后补入 Q3 季度包</li>
+    <li>FY27 增速口径仲裁（幻灯片 13-17% vs 电话会记录 14-17%）</li>
+    <li>chip v5.2 财报后重跑（四维仪刷新 + IV 分位第 2 笔）· RPS vs SPY 重跑</li>
+    <li>卖方 PT 财报后重估中枢（一周内，判据 ≥$65）</li>
+    <li>Q3 季度包 6 份正式报告（本报告为 SECTION J 主载体，季度包按仓库惯例另建）</li>
+    <li>thesis.md 模块级重打分——<b>建议已出（上表），按宪法不自动改动，等用户点头</b></li>
+  </ul>
+  <p class="small">数据来源：Q3 FY26 电话会与幻灯片（investing.com / 247wallst 转述，2026-09-02/03）· CBOE 期权链（2026-09-01）· chip_analysis_v5.2 首跑（9/2 收盘口径）· 仓库 CSV 与分析记录 · MarketBeat（PT 共识 9/1 盘前）。价格以用户券商为准（仓库规矩19）。框架正本见 docs/ 目录。</p>
+</section>
+
+<footer>
+  本报告为个人研究记录，不构成投资建议 · 生成于 2026-09-03 · HPE 研究资产库（一票一库）<br>
+  仓库：ai-quant-script-HPE · commit da821c6 · 分支 arena/01a057f3 · PR#3
+</footer>
+
+</div>
+</body>
+</html>

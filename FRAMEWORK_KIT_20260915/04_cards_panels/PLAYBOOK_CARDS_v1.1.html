@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HPE 玩法卡册 · 可复制操作卡（Card Deck Edition）</title>
+<style>
+  :root{
+    --ink:#1a2332; --sub:#5a6a7e; --line:#e3e8ef; --bg:#f7f9fb; --card:#ffffff;
+    --blue:#1e5aa8; --teal:#0e7c6b; --amber:#b26a00; --red:#b3362c; --purple:#6b4fa0;
+    --chip-green:#e6f4ea; --chip-amber:#fdf3e0; --chip-red:#fbe9e7; --chip-blue:#e8f0fb; --chip-teal:#e2f3f0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+       color:var(--ink); background:var(--bg); line-height:1.65; font-size:15px;}
+  .wrap{max-width:1080px; margin:0 auto; padding:28px 20px 80px;}
+  header.hero{background:linear-gradient(135deg,#0b4f43 0%,#0e7c6b 55%,#1e5aa8 135%);
+    color:#fff; border-radius:14px; padding:34px 34px 28px; margin-bottom:26px;}
+  header.hero h1{font-size:26px; margin-bottom:8px; letter-spacing:.5px;}
+  header.hero p{opacity:.92; font-size:14px; max-width:860px;}
+  header.hero .meta{margin-top:14px; font-size:12.5px; opacity:.8;}
+  .tri{background:var(--chip-teal); border:1px solid #bfe3db; border-radius:10px;
+    padding:12px 18px; margin-bottom:26px; font-size:13.5px;}
+  section{margin-bottom:36px;}
+  h2{font-size:20px; padding:10px 0 8px; border-bottom:2px solid var(--teal);
+     margin-bottom:16px; color:#0b4f43;}
+  h2 .en{font-size:12px; color:var(--sub); font-weight:normal; margin-left:8px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:18px 22px; margin-bottom:16px;}
+  .card h4{font-size:15.5px; margin-bottom:8px;}
+  .card .one{color:var(--sub); font-size:13.5px; margin-bottom:8px;}
+  .card p{font-size:13.5px; margin:4px 0;}
+  .card .lbl{color:var(--teal); font-weight:700;}
+  .tag{display:inline-block; font-size:11.5px; font-weight:700; border-radius:20px;
+    padding:2px 10px; margin-left:8px; vertical-align:1px;}
+  .tg{background:var(--chip-green); color:#1c7a3d;}
+  .ta{background:var(--chip-amber); color:var(--amber);}
+  .tr{background:var(--chip-red); color:var(--red);}
+  .tb{background:var(--chip-blue); color:var(--blue);}
+  .tt{background:var(--chip-teal); color:var(--teal);}
+  table{width:100%; border-collapse:collapse; font-size:13px; margin:10px 0;}
+  th{background:#eaf5f2; color:#0b4f43; text-align:left; padding:7px 10px; border:1px solid var(--line);}
+  td{padding:6px 10px; border:1px solid var(--line); vertical-align:top;}
+  tr:nth-child(even) td{background:#fbfefd;}
+  code,.file{font-family:Consolas,Menlo,monospace; font-size:12px; background:#eef2f7;
+    border-radius:4px; padding:1px 6px; color:#31435c;}
+  .quote{border-left:4px solid var(--teal); background:#f0f8f6; padding:10px 16px;
+    border-radius:0 8px 8px 0; font-size:13.5px; margin:10px 0;}
+  .blank{background:#fffdf5; border:1px dashed #d9c98a; border-radius:8px; padding:8px 14px;
+    font-size:13px; margin:8px 0; font-family:Consolas,Menlo,monospace;}
+  .chk{list-style:none; font-size:13.5px;}
+  .chk li{padding:5px 0 5px 30px; position:relative; border-bottom:1px dashed var(--line);}
+  .chk li:before{content:"☐"; position:absolute; left:4px; color:var(--teal); font-size:17px;}
+  .steps{counter-reset:st; list-style:none; font-size:13.5px;}
+  .steps li{padding:6px 0 6px 34px; position:relative; counter-increment:st;}
+  .steps li:before{content:counter(st); position:absolute; left:2px; top:7px; width:22px; height:22px;
+    background:var(--teal); color:#fff; border-radius:50%; text-align:center; line-height:22px; font-size:12px; font-weight:700;}
+  .sumcard{background:linear-gradient(135deg,#eef8f5,#eef3fb); border:1px solid #bfe3db;
+    border-radius:12px; padding:16px 22px; font-size:13.5px; margin-top:26px;}
+  .sumcard pre{font-family:inherit; white-space:pre-wrap; margin:0;}
+  footer{color:var(--sub); font-size:12px; text-align:center; margin-top:40px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>HPE 玩法卡册 <span style="font-size:14px;font-weight:normal;opacity:.85;">Card Deck Edition · v1.0</span></h1>
+  <p>提纯的最后一层：把玩法从"文档"压成<b>一张卡 = 一个动作</b>。每张卡自带触发、步骤、判据、禁区，参数留空槽——<b>复制到任何新股时只填槽，不改结构</b>。<br>
+  来源：传承卷 §6 提纯 Backlog 4 项全部转正 + 3 张通用模板卡。</p>
+  <div class="meta">v1.1 · 2026-09-05/08 · decision_log #34/#41 · 载体 docs/HPE_PLAYBOOK_CARDS_20260905.html</div>
+</header>
+
+<div class="tri">🧰 <b>三卷导航</b>：
+  ① <a href="HPE_FRAMEWORKS_PLAYBOOK_CATALOG_20260905.html"><b>目录卷</b></a>（地图：有什么/在哪/🟢🟡🔴）
+  ② <a href="HPE_HERITAGE_PLAYBOOKS_20260905.html"><b>传承卷</b></a>（家谱：世代树/三定律/传承三线）
+  ③ <b>卡册卷</b>（本卷·工具箱：7 张可复制操作卡）。<br>
+  <b>用卡规矩</b>：动手前先读卡的判据与禁区；卡=结构，参数填自己标的的槽；用完留痕 decision_log。</div>
+
+<!-- ============ 用卡规矩 ============ -->
+<section id="s0">
+<h2>§0 卡是什么、不是什么 <span class="en">Ground Rules</span></h2>
+<table>
+  <tr><th style="width:280px;">卡是 ✅</th><th>卡不是 ❌</th></tr>
+  <tr><td>执行层压缩：查卡→对判据→动手→留痕</td><td>不是研究替代品——论点变化必须回 thesis，不改卡</td></tr>
+  <tr><td>跨标的可复制结构（🟢部分原样用，🟡部分填槽）</td><td>不是参数本身——槽位里的数字永远属于单个标的</td></tr>
+  <tr><td>有失效条件的活资产（挂靠 logic_baseline diff）</td><td>不是永真公式——regime 变了先过老化处置卡（卡G）</td></tr>
+</table>
+</section>
+
+<!-- ============ 卡A ============ -->
+<section id="s1">
+<h2>§1 执行卡（转正自 Backlog） <span class="en">Execution Cards</span></h2>
+
+<div class="card">
+  <h4>卡A · 极端日做 T SOP <span class="tag tt">Backlog① 转正</span><span class="tag tg">🟢 结构</span><span class="tag ta">🟡 触发参数填槽</span></h4>
+  <div class="one">恐慌日的机械动作：触发双条件 → 买 100 股 → ATR 挂单 → 卖压回 → 结算留痕。</div>
+  <table>
+    <tr><th style="width:110px;">环节</th><th>内容</th></tr>
+    <tr><td>触发（当日盘中）</td><td>单日跌幅 ≥ <span class="blank">-7 ~ -8 %</span>，<b>或</b> 跌破 MA30 且恐慌放量 —— 满足其一即进入待命，不立即动手</td></tr>
+    <tr><td>动作</td><td>买 <span class="blank">100</span> 股卫星批（只动库存批，<b>永不卖底仓</b>）；挂单价 = 现价 − 0.5×ATR14（执行层挂策略单，价位+ATR）</td></tr>
+    <tr><td>卖出</td><td>反弹至挂单锚 <span class="blank">A_up</span> 卖出；若带内可搭 ATM Call（溢价 ≥ <span class="blank">$1.00</span>）</td></tr>
+    <tr><td>禁区</td><td>横盘区间日内 T（HPE 例：52-54）；追强势反弹（HPE 例：55+）；财报窗 ±7 天；跌破停手线（HPE 例：&lt;45.70）双侧停手</td></tr>
+    <tr><td>结算留痕</td><td>wheel_log / decision_log 记一笔：触发条件、成交价、对错判据</td></tr>
+    <tr><td>载体</td><td>操作手册 v3.1 档位表 · 教义 #22/#23/#35</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h4>卡B · 生态/同行雷达节奏卡 <span class="tag tt">Backlog② 转正</span><span class="tag tg">🟢 方法全套</span></h4>
+  <div class="one">同行出新闻时唯一要回答的问题："这改我的节奏吗？"——只改节奏，不改论点。</div>
+  <table>
+    <tr><th style="width:110px;">环节</th><th>内容</th></tr>
+    <tr><td>频率</td><td>每轮研究必扫；财报季（窗口前后 ±7 天）加密到事件即扫</td></tr>
+    <tr><td>对象</td><td>同行名单 = <span class="tag tr">🔴 标的专属参数</span>（HPE 例：DELL/WDC/STX 类硬件同行），换标的必换名单</td></tr>
+    <tr><td>判定</td><td>同行事件 → 归类：<b>节奏类</b>（订单/产能/价格战/指引时点）→ 只修正我的时序预期；<b>叙事类</b>（技术路线颠覆/行业逻辑重构）→ 升级到 thesis 层处理，雷达不裁决</td></tr>
+    <tr><td>输出</td><td>一句话节奏 diff 记 decision_log（"X 事件 → 我的 Y 时点预期提前/推迟"），<b>禁止</b>在雷达层反向改论点</td></tr>
+    <tr><td>载体</td><td>跟踪协议雷达节 · 约束 #33</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h4>卡C · 年度收益统计法 <span class="tag tt">Backlog③ 转正</span><span class="tag ta">🟡 方法可移植</span></h4>
+  <div class="one">给一只股票画"脾气画像"：全年单日收益分布，一切振幅类参数的母矿。</div>
+  <ol class="steps">
+    <li>拉日线全史（行情锚=官方 OHLC，约束 #30；口述成交只覆盖用户自身）</li>
+    <li>算日收益序列 → 分年度统计：中位 / P75 / P95 / 极端尾</li>
+    <li>分层标记 regime（如 HPE：2021-25 常态 vs 2026 翻倍期）——<b>不许用混年期参数</b></li>
+    <li>输出画像卡：常态振幅带、极端日频率、尾部深度</li>
+    <li>喂给下游：振幅锚（A_up/A_dn）、做T触发校准、CSP 门槛与实现波动互证</li>
+  </ol>
+  <p><span class="lbl">重跑触发</span>：每年初 1 次 + regime 疑变即跑（HPE 判例：#30 发现 2026 振幅 2-3 倍 → 全家参数重算）。<span class="lbl">载体</span>：#16 年度收益报告。</p>
+</div>
+
+<div class="card">
+  <h4>卡D · 参数资产复职重参模板 <span class="tag tt">Backlog④ 转正</span><span class="tag tg">🟢 模板通用</span></h4>
+  <div class="one">任何参数类资产过期后走这三步复活——不达标就继续躺着，不勉强。</div>
+  <ol class="steps">
+    <li><b>重算</b>：选定新数据窗（近 <span class="blank">N=45</span> 日 or 新 regime 分层）→ 按原公式重算参数对 <span class="blank">A_up / A_dn</span> → 用新参数回测近 <span class="blank">5</span> 日，胜率 &gt; <span class="blank">55%</span> ？</li>
+    <li><b>重分配角色</b>：参数对上游给卖出定价（CC 参考）、下游给挂单微调——<b>触发类判据不动</b>（只修锚，不改扳机）</li>
+    <li><b>恢复资格</b>：胜率达标 → 恢复报价资格；不达标 → 继续降级，标注"待下一个 regime"</li>
+  </ol>
+  <p><span class="lbl">留痕</span>：全程 decision_log（判例 #30：薅羊毛玩法①从降级到复职三步首用）。<span class="lbl">适用</span>：任何标的、任何🟡参数类资产。</p>
+</div>
+</section>
+
+<!-- ============ 卡E-G ============ -->
+<section id="s2">
+<h2>§2 模板卡（跨标的通用填写件） <span class="en">Template Cards</span></h2>
+
+<div class="card">
+  <h4>卡E · 移植五前提计分卡 <span class="tag tg">🟢 模板通用</span></h4>
+  <div class="one">任何玩法跨标的移植前的强制安检门：五项逐个打 ✓/✗，全过才动手。</div>
+  <table>
+    <tr><th style="width:60px;">前提</th><th>问题</th><th style="width:220px;">打分（换标的时填）</th></tr>
+    <tr><td>P1</td><td>标的有底仓价值吗？（不归零、值得长期持有 β 仓）</td><td class="blank">✓ / ✗</td></tr>
+    <tr><td>P2</td><td>期权链流动性够吗？（OI、价差、月权/周权齐全度）</td><td class="blank">✓ / ✗</td></tr>
+    <tr><td>P3</td><td>IV 够发工资吗？（租金 ≥ 门槛线，可量化）</td><td class="blank">✓ / ✗（门槛=___）</td></tr>
+    <tr><td>P4</td><td>事件窗口可规避吗？（财报/除息日历清楚）</td><td class="blank">✓ / ✗</td></tr>
+    <tr><td>P5</td><td>人的前提成立吗？（资金规模/仓位上限/纪律认知一致）</td><td class="blank">✓ / ✗</td></tr>
+  </table>
+  <p><span class="lbl">判例</span>：HPE = 3 过 2 不过 → 不硬搬，出 v2 六优化补课后才可行（#26/#27）。<span class="lbl">反面教材</span>：TSLA/NVDA 参数照搬 = 自杀（传承卷 §5）。</p>
+</div>
+
+<div class="card">
+  <h4>卡F · 新股冷启动 8 步 Checklist <span class="tag tg">🟢 模板通用</span></h4>
+  <div class="one">换标的时的标准动线：从空目录到首笔计划内动作。</div>
+  <ul class="chk">
+    <li>① 建库：宪法 + 双 README + decision_log / logic_baseline 双轨建档（照抄目录卷 §②）</li>
+    <li>② thesis + 破坏条件成文（🔴 从零研究，禁止复制他股论点）</li>
+    <li>③ 量化体检：跑卡C 年度收益统计法 → 脾气画像</li>
+    <li>④ 拉链：链上侦察 SOP 首拉 → 快照建档（跟踪协议 §六）</li>
+    <li>⑤ 阶梯 + 窗口：档位带、窗口制、门槛线全填新参数</li>
+    <li>⑥ 账本：wheel_log 建档，首笔动作必须是计划内（查 7 档/卡A）</li>
+    <li>⑦ 雷达：卡B 同行名单换新、节奏基线定档</li>
+    <li>⑧ 首笔计划内动作 + 对错判据留痕 → 冷启动完成</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h4>卡G · 资产老化处置卡 <span class="tag tg">🟢 流程通用</span></h4>
+  <div class="one">资产的体检-降级-复职-退役全流程——保证家产永远翻新而不是悄悄失效。</div>
+  <table>
+    <tr><th style="width:130px;">状态</th><th>进入条件</th><th>动作</th></tr>
+    <tr><td>在役</td><td>判据全绿</td><td>正常使用；每轮 logic_baseline diff 体检</td></tr>
+    <tr><td>降级</td><td>参数与实况偏离（HPE 判例：振幅锚差 2-3 倍）或可靠性存疑</td><td>标注"参考器"，禁止作为主判据 → 转卡D 复职</td></tr>
+    <tr><td>复职</td><td>卡D 三步走完且小样本验证达标</td><td>恢复原角色，decision_log 记复职日</td></tr>
+    <tr><td>退役</td><td>复职两次失败 / 前提消失（HPE 例：IV&lt;30% 引擎退役）</td><td>归档不删（历史只增不删），载体标注已退役</td></tr>
+  </table>
+  <p><span class="lbl">探测器</span>：logic_baseline 每轮 diff + 卡C regime 统计。<span class="lbl">判例</span>：#30 全流程首用。</p>
+</div>
+
+<div class="card">
+  <h4>卡H · 机构观点三角验证卡 <span class="tag tt">用户自有框架 · v1.1 入册（#41）</span><span class="tag tg">🟢 结构</span><span class="tag tr">🔴 样本内容逐标的重建</span></h4>
+  <div class="one">三层降噪结构（独立第三方 60% / 卖方过滤 40% + 辅助验证 + 分档执行）+ 仓库对账五关——长期持有者"来回搞"机构观点的标准姿势。</div>
+  <table>
+    <tr><th style="width:130px;">流程</th><th>内容</th></tr>
+    <tr><td>① 独立层 60%</td><td>DCF/独立研究：纳入标准=90 天内更新/方法透明/有假设/有跟踪记录；剔除过旧与噱头样本</td></tr>
+    <tr><td>② 卖方层 40%</td><td>PT/评级过滤后统计（P25/P50/P75）；长期机械唱多/唱空者剔除</td></tr>
+    <tr><td>③ 综合+辅助</td><td>加权结论；仅分歧大时启用技术面/空头/期权/高频基本面验证</td></tr>
+    <tr><td>④ <b>仓库对账五关</b><br>（入库门，本卡核心增量）</td><td><b>时点关</b>：每条带日期、与库比新旧，旧数据不进"最新"表（判例：WF $67[6/18] vs 库 $54[9/4]）｜ <b>口径关</b>：PE 年份/单位/MA 窗口/IV 定义（判例：FY26 11-20x vs 判据锚 FY27 11.6x）｜ <b>实测关</b>：能用市场价复现的才算数（判例：$1.30 的 9/18 P50 只有 IV≈55% 能复现，37% 只值 $0.70）｜ <b>归属关</b>：数字-机构绑定要稳，漂移即存疑（判例：SWS 65.56 vs 84）｜ <b>叙事关</b>：方向可同向采信，倍数迁移类叙事不入判据（判例：25x）</td></tr>
+    <tr><td>⑤ 执行</td><td>五关全过 → 升级"可执行证据"；否则只入"参考堆"；分档触发仍走本标的阶梯+跌因闸</td></tr>
+  </table>
+  <p><span class="lbl">频率</span>：季度 / 财报后 / 12/2 前。<span class="lbl">首用判据</span>：连续两次五关通过率 ≥80% → 升级为雷达常规源。<span class="lbl">首案</span>：#41（HPE 2026-09-08：方向同向✓；期权层与技术面两处硬矛盾出局；四处时点漂移）。</p>
+</div>
+</section>
+
+<!-- ============ 卡索引 ============ -->
+<section id="s3">
+<h2>§3 卡索引与用法映射 <span class="en">Index</span></h2>
+<table>
+  <tr><th style="width:70px;">卡</th><th style="width:190px;">名称</th><th style="width:170px;">什么时候抽这张卡</th><th>输出</th><th style="width:150px;">移植性</th></tr>
+  <tr><td>A</td><td>极端日做 T SOP</td><td>盘中触发双条件之一</td><td>挂单价 + 数量 + 结算留痕</td><td>🟢结构 🟡参数</td></tr>
+  <tr><td>B</td><td>雷达节奏卡</td><td>同行出事件/新闻</td><td>一句话节奏 diff</td><td>🟢（名单🔴）</td></tr>
+  <tr><td>C</td><td>年度收益统计法</td><td>年初 / regime 疑变</td><td>脾气画像卡</td><td>🟡</td></tr>
+  <tr><td>D</td><td>复职重参模板</td><td>参数资产被判过期</td><td>复职/继续降级 判定</td><td>🟢</td></tr>
+  <tr><td>E</td><td>五前提计分卡</td><td>玩法要搬去新标的</td><td>过/不过 + 补课清单</td><td>🟢</td></tr>
+  <tr><td>F</td><td>冷启动 8 步</td><td>新标的建档</td><td>勾选完毕的新库</td><td>🟢</td></tr>
+  <tr><td>G</td><td>老化处置卡</td><td>任何资产判据变红</td><td>降级/复职/退役 三态裁决</td><td>🟢</td></tr>
+<tr><td>H</td><td>机构观点三角验证</td><td>外部框架/机构观点跑完之后</td><td>五关过审的证据包 / 参考堆</td><td>🟢结构 🔴样本</td></tr>
+</table>
+<div class="quote"><b>一句话总结</b>：目录卷是地图，传承卷是家谱，卡册是工具箱——
+<b>地图帮你找，家谱帮你懂，卡片帮你做。</b>换标的时：卡E 安检 → 卡F 开荒 → 卡C 画像 → 参数填槽；日常：卡A/B 动手、卡G 体检。</div>
+</section>
+
+<div class="sumcard"><pre>📋 摘要卡 · 玩法卡册 v1.1（#34/#41）
+├─ 转正：传承卷 §6 Backlog 4 项 → 卡A做T SOP / 卡B雷达节奏 / 卡C年度收益法 / 卡D复职重参
+├─ 新增模板：卡E五前提计分（安检门）/ 卡F冷启动8步（开荒）/ 卡G老化处置（体检-降级-复职-退役）
+├─ v1.1（#41）：+卡H 机构观点三角验证（用户自有框架 × 仓库五关对账门：时点/口径/实测/归属/叙事）
+├─ 用卡规矩：卡=结构参数填槽；动手先读判据禁区；用完 decision_log 留痕
+└─ 三卷体系：目录（找）→ 传承（懂）→ 卡册（做）——换股=卡E安检→卡F开荒→卡C画像→填槽</pre></div>
+
+<footer>HPE 研究库 · 玩法卡册 v1.1 · 2026-09-05/08 · decision_log #34/#41 · 姊妹卷：目录卷 CATALOG / 传承卷 HERITAGE</footer>
+</div>
+</body>
+</html>

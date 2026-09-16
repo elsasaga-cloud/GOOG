@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HPE 研究库 · 框架与玩法总览（长期资产版）</title>
+<style>
+  :root{
+    --ink:#1a2332; --sub:#5a6a7e; --line:#e3e8ef; --bg:#f7f9fb; --card:#ffffff;
+    --blue:#1e5aa8; --teal:#0e7c6b; --amber:#b26a00; --red:#b3362c;
+    --chip-green:#e6f4ea; --chip-amber:#fdf3e0; --chip-red:#fbe9e7; --chip-blue:#e8f0fb;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+       color:var(--ink); background:var(--bg); line-height:1.65; font-size:15px;}
+  .wrap{max-width:1080px; margin:0 auto; padding:28px 20px 80px;}
+  header.hero{background:linear-gradient(135deg,#12305c 0%,#1e5aa8 60%,#0e7c6b 130%);
+    color:#fff; border-radius:14px; padding:34px 34px 28px; margin-bottom:26px;}
+  header.hero h1{font-size:26px; margin-bottom:8px; letter-spacing:.5px;}
+  header.hero p{opacity:.92; font-size:14px; max-width:820px;}
+  header.hero .meta{margin-top:14px; font-size:12.5px; opacity:.8;}
+  nav.toc{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:16px 22px; margin-bottom:26px; display:flex; flex-wrap:wrap; gap:8px 18px;}
+  nav.toc a{color:var(--blue); text-decoration:none; font-size:13.5px; font-weight:600;}
+  nav.toc a:hover{text-decoration:underline;}
+  section{margin-bottom:34px;}
+  h2{font-size:20px; padding:10px 0 8px; border-bottom:2px solid var(--blue);
+     margin-bottom:16px; color:#12305c;}
+  h2 .en{font-size:12px; color:var(--sub); font-weight:normal; margin-left:8px;}
+  h3{font-size:16px; margin:18px 0 8px; color:#12305c;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:18px 22px; margin-bottom:14px;}
+  .card h4{font-size:15.5px; margin-bottom:6px;}
+  .card .one{color:var(--sub); font-size:13.5px; margin-bottom:8px;}
+  .card p{font-size:13.5px; margin:4px 0;}
+  .tag{display:inline-block; font-size:11.5px; font-weight:700; border-radius:20px;
+    padding:2px 10px; margin-left:8px; vertical-align:1px;}
+  .tg{background:var(--chip-green); color:#1c7a3d;}
+  .ta{background:var(--chip-amber); color:var(--amber);}
+  .tr{background:var(--chip-red); color:var(--red);}
+  .tb{background:var(--chip-blue); color:var(--blue);}
+  table{width:100%; border-collapse:collapse; font-size:13px; margin:10px 0;}
+  th{background:#eef3f9; color:#12305c; text-align:left; padding:7px 10px; border:1px solid var(--line);}
+  td{padding:6px 10px; border:1px solid var(--line); vertical-align:top;}
+  tr:nth-child(even) td{background:#fbfcfe;}
+  code,.file{font-family:Consolas,Menlo,monospace; font-size:12px; background:#eef2f7;
+    border-radius:4px; padding:1px 6px; color:#31435c;}
+  .quote{border-left:4px solid var(--teal); background:#f0f8f6; padding:10px 16px;
+    border-radius:0 8px 8px 0; font-size:13.5px; margin:10px 0;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr;}}
+  footer{color:var(--sub); font-size:12px; text-align:center; margin-top:40px;}
+  .kpi{display:flex; flex-wrap:wrap; gap:12px; margin:12px 0;}
+  .kpi div{background:#f0f5fb; border:1px solid var(--line); border-radius:10px;
+    padding:8px 16px; font-size:12.5px;}
+  .kpi b{display:block; font-size:16px; color:var(--blue);}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div style="background:#e8f0fb;border:1px solid #c7d9f2;border-radius:10px;padding:10px 16px;margin-bottom:20px;font-size:13px;">📚 <b>三卷导航</b>：本卷=目录（空间：有什么/在哪/可移植性🟢🟡🔴） · 姊妹卷 <a href="HPE_HERITAGE_PLAYBOOKS_20260905.html"><b>《玩法提纯与传承总卷》</b></a>（时间：从哪来/怎么迭代/传给谁：7玩法卡+世代树+迭代三定律+传承三线） · 卡册卷 <a href="HPE_PLAYBOOK_CARDS_20260905.html"><b>《玩法卡册》</b></a>（工具箱：8 张可复制操作卡，v1.1 新增卡H 机构观点三角验证）</div>
+
+<header class="hero">
+  <h1>HPE 研究库 · 框架与玩法总览</h1>
+  <p>一票一库 · 单标的（HPE）长期研究资产库的全部框架、玩法与工具 —— 按「治理记忆 → 研究 → 论点账本 → 操作执行 → 工具 → 纪律」六层组织。每个条目含一句话定义、载体文件、用法与当前状态，并标注<b>可移植性</b>（🟢 直接复制到其他股 ／ 🟡 需重新参数化 ／ 🔴 HPE 专属）。</p>
+  <div class="meta">生成：2026-09-05（北京时间）｜ decision_log 已至 #31 ｜ 基准：9/4 收 $52.00 ｜ 基座 200 股 @17.943 ｜ 规划窗口 9/9 → 11 月下旬</div>
+</header>
+
+<nav class="toc">
+  <a href="#s1">① 体系总览</a><a href="#s2">② 治理与记忆层</a><a href="#s3">③ 研究框架层</a>
+  <a href="#s4">④ 论点与账本层</a><a href="#s5">⑤ 操作体系层</a><a href="#s6">⑥ 工具链</a>
+  <a href="#s7">⑦ 纪律体系</a><a href="#s8">⑧ 移植指南（复制到其他股）</a><a href="#s9">⑨ 文件地图</a>
+</nav>
+
+<!-- ================= 1 总览 ================= -->
+<section id="s1">
+<h2>① 体系总览<span class="en">System Map</span></h2>
+<div class="card">
+  <p><b>一句话哲学：</b>「结论可以错，账不能糊」——事实/判断/预测三分，每条建议预设对错判据，财报后回填；操作层把你对标的的深度认知转化为持续现金流（<b>把"等"变成收入</b>）。</p>
+  <table>
+    <tr><th style="width:16%">层</th><th style="width:34%">内容</th><th>回答的问题</th><th style="width:22%">核心载体</th></tr>
+    <tr><td><b>治理记忆层</b></td><td>宪法、双 README、逻辑基线、决策日志</td><td>我们在哪？之前怎么想？</td><td>AGENT-README / HANDOFF / logic_baseline / decision_log</td></tr>
+    <tr><td><b>研究框架层</b></td><td>双眼、321、长期追踪 A-G、估值阶梯、年度收益</td><td>它值多少？什么位置？</td><td>docs/ + reports/ + data/</td></tr>
+    <tr><td><b>论点账本层</b></td><td>thesis T1-T5、作战卡四情景、机构/指引侦察</td><td>逻辑破没破？事件怎么办？</td><td>thesis.md / events/ / reports/HPE/2026-09-0x</td></tr>
+    <tr><td><b>操作执行层</b></td><td>阶梯、AAWS 轮动引擎、操作手册 7 档表、薅羊毛正股版</td><td>什么价干什么、哪天干什么</td><td>reports/2026-09-05 评估文件 / journal/wheel_log</td></tr>
+    <tr><td><b>工具链</b></td><td>筹码仪、期权引擎、卫星报价、链上侦察、量化研究</td><td>数据从哪来、怎么算</td><td>scripts/ + options/*.py</td></tr>
+    <tr><td><b>纪律体系</b></td><td>用户规矩、三道闸、翻转条件、停手日历</td><td>什么时候必须停</td><td>各文件交叉引用</td></tr>
+  </table>
+  <div class="kpi">
+    <div><b>31</b>决策日志条目（全部预设判据）</div>
+    <div><b>15</b>活性判词（logic_baseline 每轮 diff）</div>
+    <div><b>7 档</b>操作速查表</div>
+    <div><b>3 道</b>闸门 ＞ 引擎</div>
+    <div><b>~18-19%</b>引擎租金年化（目标）</div>
+  </div>
+</div>
+</section>
+
+<!-- ================= 2 治理记忆层 ================= -->
+<section id="s2">
+<h2>② 治理与记忆层<span class="en">Governance & Memory</span></h2>
+
+<div class="card"><h4>Agent 宪法 v1.0 <span class="tag tg">🟢 直接移植</span><span class="file">AGENT-CONSTITUTION.md</span></h4>
+  <p class="one">Agent 行为根本法：新会话首动作读四件套并报「📋 上下文已加载」；历史只增不删；reset/force push 须用户确认；README 只增不删。</p>
+  <p><b>怎么用：</b>任何新会话/新 Agent/换标的库都先走这套加载仪式，保证零上下文损耗。移植时整文件照抄。</p></div>
+
+<div class="card"><h4>双 README 交接体系 <span class="tag tg">🟢 直接移植</span><span class="file">AGENT-README.md ＋ HANDOFF.md</span></h4>
+  <p class="one">分工明确：AGENT-README 只管<b>会话/任务/分支状态快照</b>（任务表/等待中/commit 表/对话史）；HANDOFF 管<b>深度交接</b>（研究体系、用户规矩、更新 SOP、当前状态 §六）。两者并存不互替。</p>
+  <p><b>怎么用：</b>每轮对话结束或阶段完成必须更新；时间戳+更新由+最新口径三件套同步。移植时复制骨架、换内容。</p></div>
+
+<div class="card"><h4>逻辑基线（活性判词快照）<span class="tag tg">🟢 直接移植</span><span class="file">journal/logic_baseline.md</span></h4>
+  <p class="one">全库「当前正在生效的判断」唯一快照（15 行判词：论点/三支柱/转型三轨/估值中枢/折价/PT 判据/趋势/关键价位/CSP 参数/阶梯状态/指引锚/下车条件/下一决策日/翻转条件/引擎）。</p>
+  <p><b>怎么用：</b>每次深度对话开始读、结束 diff——变化处打 <code>[变更 日期]</code> 标记、旧值进变更史列。<b>跨会话 diff 本文件 = 逻辑变化检测</b>，不靠任何人的记忆。</p></div>
+
+<div class="card"><h4>决策日志双轨制 <span class="tag tg">🟢 直接移植</span><span class="file">journal/decision_log.md（#1-#31）</span></h4>
+  <p class="one">每条决策 8 列：# / 日期 / 类型 / 当日价 / 持仓变动 / 内容 / 依据 / <b>预设对错判据</b> / [回填]结果。建议类必须先注册判据再执行，事后回填，禁止事后找补。</p>
+  <p><b>怎么用：</b>任何操作（建议/计划/实际操作/记录/勘误）都落一行；勘误不删原文（如 #13 勘误 Q2"+30%"→两日+17.3%，#28 勘误 9/3 收盘 54.44）。这是整个体系「结论可以错、账不能糊」的物理载体。</p></div>
+
+<div class="card"><h4>长期跟踪协议 v1.0 <span class="tag tg">🟢 直接移植</span><span class="file">docs/HPE_TRACKING_PROTOCOL_20260905.md</span></h4>
+  <p class="one">每轮深度对话的标准动作：<b>会话五步</b>（加载四件套→对账持仓→行情快照→逻辑 diff→带时间戳入库）＋ <b>生态雷达</b>（NVDA/ORCL/AMD/Juniper 及其对标的读法）＋ <b>同行雷达</b>（DELL/SMCI/CSCO 的财报窗口与解读映射）＋ <b>8 维核查清单</b>（论点/三支柱/转型/趋势/估值/机构/期权/筹码）＋ <b>链上侦察 SOP §六</b>。</p>
+  <p><b>怎么用：</b>换股票只改雷达对象和读法映射表，流程原封不动。</p></div>
+</section>
+
+<!-- ================= 3 研究框架层 ================= -->
+<section id="s3">
+<h2>③ 研究框架层<span class="en">Research Frameworks</span></h2>
+
+<div class="card"><h4>双眼框架（趋势果论 × 321 基本面）<span class="tag ta">🟡 需重参数化</span><span class="file">docs/FRAMEWORK_TWO_EYES.md</span></h4>
+  <p class="one">趋势之眼：State 1-4 + State X 分级、R8 离场条件（<b>跌破 MA60 ＋ 爆量阴线 ≥1.3x ＋ 阴线 ≥1.5%，双条件缺一不可</b>）；基本面之眼：321 收敛体系。两眼结论 → 融合矩阵四象限（当前 HPE = 价值区：低估+优质×粘合）。</p>
+  <p><b>怎么用：</b>趋势层只管节奏不管论点——「R8 触发不改变值得，只改变节奏」。移植时 MA 周期/爆量阈值按新股股性重定。</p></div>
+
+<div class="card"><h4>321 收敛体系 <span class="tag ta">🟡 需重参数化</span><span class="file">docs/METHODOLOGY.md ＋ reports/HPE/2026-08-16/05_321_final_conclusion.md</span></h4>
+  <p class="one">3 分析框架（①深度估值 48 分 ②综合 25 步 57 分 ③双驱动 57 分）＋ 2 量化（筹码四维仪 44.1、47 列数据）＋ 1 预期（卖方共识）→ 综合分（8/16=57.6；揭盅后方向 ≈58-63，性质从「贵而等」变「好而等位置」）→ 对应执行口径（观察哨/第一档/第二档分仓挂单）。</p>
+  <p><b>怎么用：</b>分数带 → 动作带的映射表是通用骨架；各分项权重按标的行业调整。</p></div>
+
+<div class="card"><h4>长期追踪框架 A-G <span class="tag tg">🟢 直接移植</span><span class="file">docs/HPE_LONG_TERM_TRACKING_FRAMEWORK.md</span></h4>
+  <p class="one">七个模块管「跟踪什么」：A 公司基因/商业模式/护城河、B 数据质量与股东回报、C 并购桥接表+整合 KPI（Juniper 用）、D AI 业务分层与质量、E ROIC 修复与资本结构压测、F 重点指标、G 增长与竞争追踪。</p>
+  <p><b>怎么用：</b>季度包归档的目录结构就按它来；换股票改模块内容不改结构。</p></div>
+
+<div class="card"><h4>深度估值框架（隐含预期法）＋ 价格阶梯 <span class="tag ta">🟡 需重参数化</span><span class="file">reports/HPE/2026-09-04/valuation_intrinsic_value_note_20260904.md</span></h4>
+  <p class="one">方法：把价格反译成市场隐含的 P/E、FCF yield、增速预期 → 与公司指引/历史倍数带/同行对照 → 得出价值中枢与「纪律价」。HPE 现值：中枢 <b>$60-65</b>（13-14x FY27 + FCF yield ~6% + DCF≈$63 互洽）、bear 44-48、bull 67-72+；<b>$50 = MA60+筹码密集+FCF yield 7.4% 三线共振的入场线（非价值）</b>。价格阶梯七档（$45→$69.4 每档含义）。</p>
+  <p><b>怎么用：</b>任何股票都能跑这套「价格 → 隐含预期 → 中枢」流程；引用 CAGR/中枢必须带截止日（敏感性纪律）。</p></div>
+
+<div class="card"><h4>年度收益统计方法 <span class="tag tg">🟢 直接移植</span><span class="file">data/HPE/HPE_annual_returns_since_split_2015_20260903.csv ＋ .md</span></h4>
+  <p class="one">全史逐日历年价格/含息收益、双基点 CAGR（分家日/年末）、分红累计、对比组（HPQ/SPY）、敏感性标注（停在 2025 年末仅 +13.6% → 2026 九个月抬升 8.2pp）。</p>
+  <p><b>怎么用：</b>数据管线：Yahoo v8 月线分块抓取（adjclose 含分派处理）+ 交叉验证 + 锚点勘误留痕（#28）。</p></div>
+</section>
+
+<!-- ================= 4 论点账本层 ================= -->
+<section id="s4">
+<h2>④ 论点与账本层<span class="en">Thesis & Event Playbooks</span></h2>
+
+<div class="card"><h4>Thesis 论点追踪 T1-T5 <span class="tag tr">🔴 标的专属（骨架🟢）</span><span class="file">thesis.md</span></h4>
+  <p class="one">五条论点各配<b>破坏阈值</b>，每季财报后 3 日内核查（✅加强/➖不变/⚠️削弱/❌破坏）。当前：T1-T5 零破坏，T4 挂 Q4 OM 观察哨。<b>本文件管论点，阶梯管执行。</b>长期持有的唯一下车条件 = T1-T5 破坏，永非价格。</p>
+  <p><b>怎么用：</b>换股票重写论点内容，但「论点+破坏阈值+季核查」三件套结构照抄。</p></div>
+
+<div class="card"><h4>财报作战卡（四情景预案）<span class="tag tg">🟢 直接移植</span><span class="file">events/battle_card_HPE_20260902.md</span></h4>
+  <p class="one">财报前预注册四情景 🟢🟡🟠🔴 + 每情景的触发动作 + 判据，事后按实际情景对号执行并增补复盘。9/2 实战：🟡「达标即跌」兑现 → 触发 R8 判定/第一档核查/期权预案作废全链条。</p>
+  <p><b>怎么用：</b>任何二元事件（财报/FDA/并购）都先写卡再过事件；配套 <b>PEAD 统计</b>（近 6 季财报两日均值作 gap 预期锚）。</p></div>
+
+<div class="card"><h4>机构与指引侦察 <span class="tag ta">🟡 每股重建</span><span class="file">reports/HPE/2026-09-05/institutional_pt_discount_analysis_20260905.md ＋ management_guidance_q4_fy27_deep_dive_20260905.md</span></h4>
+  <p class="one">两份标准化侦察：①<b>卖方 PT 全景</b>（23 家：均值/中位/区间/0 Sell/下调理由结构分析 → 判据「PT 中枢 ≥$65 存活」）；②<b>管理层指引深挖</b>（Q4/FY27 逐项 + margin bridge + 供给瓶颈口径 + 未入框架的免费期权如 AMD Helios）。折价量化：现价 vs 中枢 = 13-20%。</p>
+  <p><b>怎么用：</b>财报后固定跑一遍；「下调 4 家全是砍位置不砍逻辑」这类<b>结构判读</b>比数字本身重要。</p></div>
+</section>
+
+<!-- ================= 5 操作体系层 ================= -->
+<section id="s5">
+<h2>⑤ 操作体系层<span class="en">Execution Systems</span></h2>
+
+<div class="card"><h4>阶梯加仓框架 v1.1/v1.2 <span class="tag ta">🟡 需重参数化</span><span class="file">aaws_porting_assessment…md 教义 v1.1 节 ＋ #23/#25</span></h4>
+  <p class="one">HPE 版：基座 200@17.943 <b>不是上限</b>（历史峰值 800 股@44）；一档 47-50（+80~200）、二档 41-45（+200→600）、深档 ≤41 已移出本窗口；<b>窗口制</b>（规划 9/9→11 月下旬，不跨 Q4 做计划，12/2=重规划日）；未触发档位窗口关闭自动过期。</p>
+  <p><b>怎么用：</b>「基座+阶梯+三道闸」骨架通用；各档价格来自估值锚+技术位，须按新股重算。</p></div>
+
+<div class="card"><h4>HPE-AAWS 期权轮动引擎 <span class="tag ta">🟡 需重参数化</span><span class="tag tb">📋 参数卡待 9/9 拍板</span><span class="file">aaws_porting_assessment…md v1/v2 节 ＋ journal/wheel_log_HPE.md</span></h4>
+  <p class="one">两槽制：<b>backbone</b>（月权：Oct16 P50，净接货 ≤$50，核价 ≥$2.30≈IV50%）＋ <b>rotator</b>（周权：仅 spot≤50 开，带外 ≥$0.40 / 带内 ATM ≥$1.00）；<b>三态退出</b> L=0.2（卖出让利 ≤ 权利金 20% 即卖换流动性，否则等）；<b>接货批 CC</b>（净接货+4 以上才卖，被行权=带租金的止盈挂单；底仓永不）；Strangle 条件启用（仅库存覆盖 C 腿）；周度节律（一二扫描/三主操作/四三态/五结算）。引擎租金目标 ~18-19%/年。8 周判据挣信任：≥75% 周正现金流 + 零 basis&gt;50 违规。</p>
+  <p><b>怎么用：</b>「现金担保卖短期 PUT=被付钱等回调」骨架可移植任何愿意接货的标的；行权价红线、门槛、张数全部按新股 IV/波动重算（PFE 版红线 26，HPE 版 50）。</p></div>
+
+<div class="card"><h4>操作手册 v3.1（7 档速查表）<span class="tag tg">🟢 骨架直接移植</span><span class="file">评估文件 v3.1 节 ＋ #31</span></h4>
+  <p class="one">「价格 → 动作」主速查表：≥54.42 持有不动 / 52-54.4 周三开 backbone / 50-52 backbone 主战场 / 47.8-50 一档执行+rotator 开 / 45.7-47.8 极端日 T+带内 ATM / &lt;45.70 双侧停手 / 41-45 二档。配套周度节律五句 + 问答契约。</p>
+  <p><b>怎么用：</b>换股票重填价格列；表结构（正股侧×期权侧双列）通用。<b>问答契约</b>：说「拉链」→ 五件套决策单【#56 升级：增⑥OI/IV增量对比=六件套】；说「咋玩」→ 查表报动作；说「结算」→ 更新流水与判据；每周五 → 周报。</p></div>
+
+<div class="card"><h4>薅羊毛正股版 v4.4→v5.0（卫星仓套利）<span class="tag ta">🟡 待重校准</span><span class="file">options/satellite_quote.py（库内 v5.0）</span></h4>
+  <p class="one">振幅锚三档报价（A_up=p75 振幅→卖三档、A_dn=p50 回落→买三档，K_SELL/K_BUY=1.0/0.7）＋ 筹码区分位评分 ＋ 场景识别 ＋ 月度 3 轮限额 ＋ <b>卖前查 CC 防裸卖硬风控</b>（v5.0 新增）＋ 价格源四级回退。人工战绩 2 胜 0 负（+$120/+$412）。</p>
+  <p><b>当前状态：</b>⚠️ 2026 波动 regime 切换（最近 45 日振幅中位 6.4% = 旧锚 2-3 倍）→ <b>降级为参考器</b>；复职三步：①振幅分布只取 2026 数据（或 ATR14）重算 ②用途改 CC 定价与阶梯微调 ③重跑 5D 胜率&gt;55% 才恢复报价资格。</p></div>
+
+<div class="card"><h4>薅羊毛研究层（量化多 Sheet）<span class="tag ta">🟡 需重跑数据</span><span class="file">scripts/hpe_quant_research_multisheet.py</span></h4>
+  <p class="one">偏离度分桶胜率（MA15/30/60 偏离 × 未来 1/3/5 日收益）、回调支撑统计、获利比例分桶、筹码集中度、综合信号回测 → Excel 8 Sheet。这是 K_SELL/K_BUY 与振幅锚的<b>统计依据源</b>（薅羊毛三代同源的父辈）。</p>
+  <p><b>怎么用：</b>任何股票换 Excel 数据源即可跑；HPE 当前需用 2026 年数据重跑（regime 已变）。</p></div>
+</section>
+
+<!-- ================= 6 工具链 ================= -->
+<section id="s6">
+<h2>⑥ 工具链<span class="en">Toolkit</span></h2>
+<div class="grid2">
+<div class="card"><h4>筹码四维仪 v5.2 <span class="file">scripts/chip_analysis_v5.2.py</span></h4>
+  <p class="one">47 列筹码数据 + BSM 自算 IV（根治 Yahoo 垃圾 IV）+ 隐含 Move + GEX pin + PEAD 两日口径（以财报日收盘为 base）+ MaxPain（argmin+现价±30% 带过滤，v5.0 方向 bug 已修）+ ATR 执行层。用户本地跑，实时链。</p></div>
+<div class="card"><h4>CBOE 链上侦察 <span class="file">docs/HPE_TRACKING_PROTOCOL §六</span></h4>
+  <p class="one">fetch 抓 <code>cdn.cboe.com/api/global/delayed_quotes/options/{TICKER}.json</code>（延时~15min，全链 IV/希腊/OI）→ 62 块二分定位到期×行权价 → 五件套决策单（IV 面板/backbone 核价/rotator 核价/OI 墙/开等禁）【#56 升级：+⑥OI/IV增量对比 vs 上张快照=六件套】。触发词「拉链」。换 ticker 一秒移植。🟢</p></div>
+<div class="card"><h4>期权引擎 + 持仓事实源 <span class="file">options/options_engine.py ＋ positions.py</span></h4>
+  <p class="one">positions.py 是唯一事实源（TOTAL_SHARES/AVG_COST/OPEN_OPTIONS/财报日历/派生约束：备兑余量、担保现金）。引擎与卫星仓脚本共读。改持仓只改这里。🟢</p></div>
+<div class="card"><h4>轮动流水账 <span class="file">journal/wheel_log_HPE.md</span></h4>
+  <p class="one">周度流水（腿/行权价/权利金/结果/净接货/正股动作/累计）+ 月度复盘（行权率/年化/三态让利合计）。参数卡冻结后启用。🟢</p></div>
+<div class="card"><h4>盘前监控 v7.2 <span class="file">premarket_monitor.py</span></h4>
+  <p class="one">依赖 yfinance 实时数据（沙箱不可跑，用户本地跑）；盘前快报。🟢</p></div>
+<div class="card"><h4>thesis_checker <span class="file">scripts/thesis_checker.py</span></h4>
+  <p class="one">论点破坏阈值自动核查脚本；财报后跑一遍对照 T1-T5。🟢（阈值随标的改）</p></div>
+</div>
+</section>
+
+<!-- ================= 7 纪律体系 ================= -->
+<section id="s7">
+<h2>⑦ 纪律体系<span class="en">Discipline</span></h2>
+<div class="card">
+<h3>用户规矩精选（全 30 条见 HANDOFF §二）</h3>
+<table>
+  <tr><th style="width:34%">规矩</th><th>内容</th></tr>
+  <tr><td>一票一库</td><td>禁组合配置话术；单标的全链条研究</td></tr>
+  <tr><td>回调先问论点</td><td>不机械止损；卖出分层：论点破坏=硬提醒、估值换仓=软建议用户拍板</td></tr>
+  <tr><td>价格口径规矩19</td><td>成交/成本/盘后价以用户口述为事实源（成本 17.943 即此规矩的产物）</td></tr>
+  <tr><td>参数归用户、判据归体系</td><td>仓位上限/规模/张数用户定；触发质量、闸门、判据体系管，不随行情松动</td></tr>
+  <tr><td>锚点纪律规矩23</td><td>假设锚点必须标注来源与隐含概率；尾部展示用 $44=11%/$42=6% 档</td></tr>
+  <tr><td>历史只增不删</td><td>旧判断不反向覆盖；勘误留痕（#13/#28 两案）；缺数据≠利空</td></tr>
+  <tr><td>不跨 Q4 做计划 #25</td><td>规划窗口 2-3 个月；财报二元事件是窗口边界不是计划输入</td></tr>
+  <tr><td>每建议写对错判据</td><td>先注册后执行，事后回填；分歧记录交时序裁决</td></tr>
+</table>
+</div>
+<div class="grid2">
+<div class="card"><h4>三道闸（优先级高于一切引擎）</h4>
+  <p class="one">① T1-T5 论点闸：破=全阶梯冻结；② 跌因甄别闸：板块流弹=绿灯、公司坏消息=等判决；③ 窗口制：11 月下旬清场，不带立场进财报。</p></div>
+<div class="card"><h4>翻转条件（窗口内四条）#24/#25</h4>
+  <p class="one">PT 中枢 &lt;55 或订单环比转负 → 支柱②翻红重写；IV 常态 &lt;30% → 租金引擎退役；价格兑现 60-65 → 切「持有+收租」模式；T1-T5 破坏 = 唯一永久下车线。</p></div>
+<div class="card"><h4>停手日历</h4>
+  <p class="one">财报黑窗（±7 天，窗口制延长至月末清场）／ Dell 财报周（β1.44 流弹源）／ 除息周 ／ IV&lt;30% ／ 三支柱任一翻红 ／ 「不确定」。</p></div>
+<div class="card"><h4>可靠性层级 #30</h4>
+  <p class="one">β 底仓（扛一切）＞ 三道闸（刹车）＞ 引擎（薄 edge×纪律×复利）＞ 正股报价器（待校准）。两引擎全灭代价 ≈ 少收 $1-2k/年租金，不伤本金。</p></div>
+</div>
+</section>
+
+<!-- ================= 8 移植指南 ================= -->
+<section id="s8">
+<h2>⑧ 移植指南：复制到其他股<span class="en">Porting Guide</span></h2>
+<div class="card">
+<table>
+  <tr><th style="width:14%">标记</th><th style="width:42%">框架</th><th>移植动作</th></tr>
+  <tr><td>🟢 直接移植</td><td>宪法 / 双 README / decision_log 双轨制 / logic_baseline / 跟踪协议会话五步 / 作战卡四情景 / AAWS 骨架（两槽+三态+周节律）/ 7 档速查表结构 / wheel_log / CBOE 链上 SOP / options 引擎骨架 / 问答契约</td><td>换 ticker 与内容即可，流程一字不改</td></tr>
+  <tr><td>🟡 重参数化</td><td>振幅锚（A_up/A_dn）/ 波动 regime 判别 / CSP 门槛（IV+股性）/ 阶梯价格带（估值锚+技术位）/ 风险参数 L、K / 张数与轮次限额 / 估值中枢与价格阶梯 / MA 与 R8 阈值</td><td>先跑新标的的历史数据（振幅/偏离胜率/IV）+ 估值研究，再填参数卡</td></tr>
+  <tr><td>🔴 标的专属</td><td>T1-T5 论点内容 / 具体价位（49.44/45.70/60-65）/ 机构 PT / backlog 等基本面事实 / 血统判定里的具体数字</td><td>不可复制，每只股从零研究</td></tr>
+</table>
+<h3>新股票冷启动清单（8 步）</h3>
+<table>
+  <tr><th>#</th><th>动作</th><th>产出</th></tr>
+  <tr><td>1</td><td>建库：宪法+双 README 骨架</td><td>新 repo 或新目录</td></tr>
+  <tr><td>2</td><td>深度研究：商业模式/护城河/估值中枢/价格阶梯</td><td>thesis.md（T1-T5+破坏阈值）</td></tr>
+  <tr><td>3</td><td>量化体检：振幅 regime/偏离胜率/筹码分布（量化研究脚本）</td><td>A_up/A_dn/K 值</td></tr>
+  <tr><td>4</td><td>拉链：CBOE 链（IV 面板/OI 墙/可用行权价）</td><td>CSP 门槛与两槽参数卡</td></tr>
+  <tr><td>5</td><td>定阶梯：基座+各档价格带+三道闸价格</td><td>7 档速查表</td></tr>
+  <tr><td>6</td><td>建账本：decision_log（#1 起）+ logic_baseline</td><td>记忆体系</td></tr>
+  <tr><td>7</td><td>雷达表：合作方+同行+读法映射（跟踪协议 §二/三）</td><td>事件日历</td></tr>
+  <tr><td>8</td><td>首笔只做「计划内动作」，8 周判据攒样本</td><td>引擎点火或继续等</td></tr>
+</table>
+<div class="quote">移植的哲学：先复制<b>流程和账本</b>（防错），再重算<b>参数</b>（适配股性），永不复制<b>结论</b>（每只股的论点必须自己长出来）。反例已验证：同一套 AAWS，PFE=工业化流程，TSLA/NVDA=自杀——五前提计分卡先行。</div>
+</div>
+</section>
+
+<!-- ================= 9 文件地图 ================= -->
+<section id="s9">
+<h2>⑨ 关键文件地图<span class="en">File Map</span></h2>
+<div class="card">
+<table>
+  <tr><th style="width:46%">文件</th><th>内容</th></tr>
+  <tr><td><code>AGENT-README.md</code> / <code>AGENT-CONSTITUTION.md</code></td><td>会话快照 / Agent 宪法</td></tr>
+  <tr><td><code>HANDOFF.md</code></td><td>深度交接书（研究体系/30 条规矩/SOP/当前状态）</td></tr>
+  <tr><td><code>thesis.md</code></td><td>T1-T5 论点追踪（管论点，阶梯管执行）</td></tr>
+  <tr><td><code>journal/decision_log.md</code></td><td>决策日志 #1-#31（双轨制）</td></tr>
+  <tr><td><code>journal/logic_baseline.md</code></td><td>活性判词基线（15 行，每轮 diff）</td></tr>
+  <tr><td><code>journal/wheel_log_HPE.md</code></td><td>轮动引擎流水（参数卡待拍板）</td></tr>
+  <tr><td><code>options/positions.py</code></td><td>持仓唯一事实源（200 股 @17.943，期权清零）</td></tr>
+  <tr><td><code>options/options_engine.py</code> / <code>satellite_quote.py</code> / <code>quant_core.py</code></td><td>期权引擎 / 卫星仓报价 v5.0 / Excel 底座</td></tr>
+  <tr><td><code>scripts/chip_analysis_v5.2.py</code></td><td>筹码四维仪（BSM IV/GEX/PEAD/MaxPain）</td></tr>
+  <tr><td><code>scripts/hpe_quant_research_multisheet.py</code></td><td>量化研究多 Sheet（薅羊毛统计父辈）</td></tr>
+  <tr><td><code>docs/</code></td><td>双眼/321 方法论/长期追踪 A-G/跟踪协议/汇编/数据字典</td></tr>
+  <tr><td><code>events/battle_card_HPE_20260902.md</code></td><td>财报作战卡（四情景+增补1-3）</td></tr>
+  <tr><td><code>reports/HPE/2026-09-03/…deep_dive_all_frameworks…</code></td><td>Q3 揭盅全框架深度调查（SECTION J 主载体）</td></tr>
+  <tr><td><code>reports/HPE/2026-09-04/valuation_intrinsic_value_note…</code></td><td>估值追问：50=纪律价非价值，中枢 60-65</td></tr>
+  <tr><td><code>reports/HPE/2026-09-05/institutional_pt_discount_analysis…</code></td><td>机构 PT 全景+折价量化 13-20%</td></tr>
+  <tr><td><code>reports/HPE/2026-09-05/management_guidance_q4_fy27_deep_dive…</code></td><td>管理层 Q4/FY27 指引深挖</td></tr>
+  <tr><td><code>reports/HPE/2026-09-05/aaws_porting_assessment…</code></td><td>AAWS 全家族文档（v1 移植/v2 优化/v2.5 血统/v3 可靠性/v3.1 手册）</td></tr>
+  <tr><td><code>data/HPE/HPE_options_chain_20260905_cboe_recon.md</code></td><td>链上侦察首战快照（9/11+9/18 全档）</td></tr>
+  <tr><td><code>data/HPE/HPE_annual_returns_since_split…csv+md</code></td><td>拆分十年收益统计（价格 +18.6%/含息 +21.8% CAGR）</td></tr>
+</table>
+</div>
+</section>
+
+<footer>HPE 研究库 · 框架与玩法总览 ｜ 生成 2026-09-05 ｜ 决策日志 #1-#31 ｜ 下一个决策日 9/9（链上核价+引擎点火判定）<br>
+本文件为静态快照：框架演化以 logic_baseline 与 decision_log 为准。</footer>
+</div>
+</body>
+</html>
