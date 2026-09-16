@@ -1,31 +1,26 @@
 name: GOOG Daily Crawl
-
 on:
   schedule:
     - cron: '0 3 * * *'
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - name: Install deps
         run: pip install -q pandas numpy requests
-      - name: Generate Full Panel V-next (27章完整版)
+      - name: Generate Full Panel
         run: |
           DATE=$(date +%Y%m%d)
-          python scripts/GOOG/gen_full_panel.py || python scripts/GOOG/gen_html_20260916.py
+          python scripts/GOOG/gen_full_panel.py
           ls -lh GOOG_OPERATION_PANEL*.html
-          grep -c "<h2>" GOOG_OPERATION_PANEL_${DATE}_V*.html | tail -n 1
+          grep -c "<h2>" GOOG_OPERATION_PANEL_${DATE}_V*.html
       - uses: actions/upload-artifact@v4
         with:
           name: goog-panel-${{ github.run_id }}
@@ -33,11 +28,10 @@ jobs:
             GOOG_OPERATION_PANEL*.html
             reports/
             data/
-          retention-days: 90
       - name: Commit to main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add GOOG_OPERATION_PANEL*.html reports/ data/ || true
-          git diff --cached --quiet || git commit -m "chore: daily full panel $(date +%Y%m%d) 27章完整版"
+          git diff --cached --quiet || git commit -m "chore: daily full $(date +%Y%m%d) 27章"
           git push origin main
