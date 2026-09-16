@@ -1,0 +1,24 @@
+{
+  "GOOG_YTD": "8.26-10.93%",
+  "QQQ_YTD": "16.15-16.90%",
+  "SPY_YTD": "9.58-10.81%",
+  "GOOG_1Y": "61.92-76.5%",
+  "QQQ_1Y": "24.75-26.67%",
+  "GOOG_vs_52W": "-12.3%",
+  "MAG7_vs_52W": {
+    "AMZN": "-11%",
+    "AAPL": "-11.7%",
+    "GOOG": "-12.3%",
+    "META": "-14.4%",
+    "NVDA": "-18.5%",
+    "TSLA": "-32.6%",
+    "MSFT": "-32.9%"
+  },
+  "correlation_GOOQ_QQQ": 0.74,
+  "correlation_GOOG_SPY": 0.62,
+  "beta": 1.23,
+  "sharpe_GOOQ": 1.94,
+  "sharpe_QQQ": 1.27,
+  "source": "web_search + portfolioslab + fidelity",
+  "date": "2026-09-16T02:33:29.933917"
+}

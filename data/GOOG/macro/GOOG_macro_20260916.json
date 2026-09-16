@@ -1,0 +1,12 @@
+{
+  "sector": "Communication Services / Internet Content & Information",
+  "fiscal_year": "Dec 31",
+  "employees": 198933,
+  "market_cap": "4.176T",
+  "beta": 1.23,
+  "fomc": "2026 neutral rate path, GOOG rate sensitivity medium, ad spend cyclicality",
+  "cpi": "Digital ad spend correlates with GDP, Cloud secular growth",
+  "antitrust": "DOJ remedies trial May 2025 final order late 2026 appeal to 2028+ Chrome sale proposed not broken up yet",
+  "ai_regulation": "Potential AI kill switch for Gemini models risk, analysts $504 target",
+  "source": "yahoo finance + lawfold + tech-insider"
+}

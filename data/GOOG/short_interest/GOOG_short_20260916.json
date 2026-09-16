@@ -1,0 +1,6 @@
+{
+  "GOOG": {"short_interest":"39.05M","float_pct":"0.37%","change":"-5.64% MoM","dollar":"14.92B","ratio":"2.1 days","avg_vol":"19.67M","borrow_fee":"0.25-0.41% low","date":"2026-04-30"},
+  "GOOGL": {"short_interest":"82.91M","float_pct":"0.77%","change":"+0.94%","dollar":"31.54B","ratio":"2.9","avg_vol":"31.24M","date":"2026-05-29"},
+  "interpretation": "0.37% <10% positive <2% healthy per KIT, no squeeze",
+  "source": "marketbeat + fintel + gurufocus"
+}

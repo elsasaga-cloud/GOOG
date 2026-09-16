@@ -1,0 +1,14 @@
+{
+  "top_individual": [
+    {"name":"Larry Page","shares":"B shares controlling","note":"co-founder"},
+    {"name":"Sergey Brin","shares":"362.76M B 42%","net_worth":"~240B"},
+    {"name":"L. John Doerr","shares":"22.34M B + 941k A","role":"board"}
+  ],
+  "top_institutional": [
+    {"holder":"Vanguard","GOOG":"306.94M 5.55%","GOOGL":"528.97M 9.09%"},
+    {"holder":"BlackRock","GOOG":"369.92M 6.69%","GOOGL":"441.99M 7.59%"},
+    {"holder":"State Street","GOOG":"190.92M 3.45%","GOOGL":"228.3M 3.92%"}
+  ],
+  "recent_transactions": "12 sales by single director Apr 15 2026 $348k Class C",
+  "source": "investopedia + yahoo holders + fintel"
+}

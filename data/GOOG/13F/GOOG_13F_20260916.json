@@ -1,0 +1,26 @@
+{
+  "total_owners": 5791,
+  "total_shares": 4552706667,
+  "avg_allocation": "1.9218%",
+  "top_GOOG": [
+    {
+      "holder": "BlackRock",
+      "shares": "369.92M",
+      "pct": "6.69%",
+      "value": "121B"
+    },
+    {
+      "holder": "Vanguard",
+      "shares": "306.94M",
+      "pct": "5.55%",
+      "value": "100B"
+    },
+    {
+      "holder": "State Street",
+      "shares": "190.92M",
+      "pct": "3.45%"
+    }
+  ],
+  "source": "web_search + fintel + yahoo holders",
+  "note": "Full 13F requires SEC EDGAR 13F-HR filings parsing, use sec_edgar crawler with CIK list"
+}

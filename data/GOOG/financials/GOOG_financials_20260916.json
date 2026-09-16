@@ -1,0 +1,32 @@
+{
+  "Q2_2026": {
+    "revenue":"119.8B +24% YoY +23% CC",
+    "google_services":"94.5B +15%",
+    "search":"63.3B +17%",
+    "youtube_ads":"11.055B +13%",
+    "network":"7.3B -1%",
+    "subscriptions":"12.9B +15%",
+    "cloud":"24.8B +82% YoY operating 8.8B vs 2.8B backlog 514B",
+    "other_bets":"382M +2.4% loss 1.8B",
+    "operating_income":"40.8B +30% margin 34% +2pp",
+    "net_income":"112.1B +298% incl 99B equity gains",
+    "eps":"9.11 +294%",
+    "ocf":"39.1B",
+    "capex":"44.9B",
+    "fcf":"-5.9B Q2 guidance 195-205B 2026",
+    "cash":"242.5B"
+  },
+  "valuation": {
+    "pe_ttm":"17.36 Yahoo / 16.59-17.48 Guru",
+    "forward_pe":"22.98 Guru / 28.90 FinanceCharts",
+    "roe":"48.68%",
+    "roa":"12.96%",
+    "margin":"54.77%",
+    "revenue_ttm":"445.87B",
+    "net_income_ttm":"244.12B",
+    "eps_ttm":"19.67",
+    "debt_equity":"18.86%",
+    "fcf_ttm":"22.67B"
+  },
+  "source": "yahoo finance + sec 8-k + quartz + mirrorreview"
+}

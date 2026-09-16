@@ -1,0 +1,11 @@
+{
+  "next_earnings": "2026-10-28 Wed After Market Q3 2026 UNCONFIRMED",
+  "history": [
+    {"date":"2026-07-22","q":"Q2 2026","eps":"9.11 vs 2.89 est +217%","revenue":"119.80B vs 117.07B","cloud":"24.8B +82%","youtube":"11.055B +13%","search":"63.3B +17%"},
+    {"date":"2026-04-29","q":"Q1 2026","eps":"5.11 vs 2.66","revenue":"109.90B vs 106.96B","cloud":"20.0B +63%","youtube":"9.88B +11%","search":"60.4B +19%"},
+    {"date":"2026-02-04","q":"Q4 2025","eps":"2.82","revenue":"113.83B"},
+    {"date":"2025-10-29","q":"Q3 2025","eps":"2.87","revenue":"102.35B"}
+  ],
+  "pattern": "Q1 late Apr, Q2 late Jul, Q3 late Oct, Q4 early Feb",
+  "source": "wallstreethorizon + marketbeat + public.com"
+}
