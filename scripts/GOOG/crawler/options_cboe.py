@@ -5,7 +5,7 @@ GOOG 期权链拉取 - CBOE延时链 + Yahoo备份 + 多源交叉
 import os, json, time, datetime, pathlib, urllib.request, ssl
 from pathlib import Path
 
-DATA_DIR=Path("/home/user/GOOG/data/GOOG/options_chain")
+DATA_DIR=Path(__file__).resolve().parents[3] / "data" / "GOOG" / "options_chain"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 CBOE_URL="https://cdn.cboe.com/api/global/delayed_quotes/options/GOOG.json"

@@ -5,7 +5,7 @@ SEC EDGAR 爬取 - 13F/10-K/Q/内部人Form4
 import json, time, datetime, pathlib, urllib.request, ssl
 from pathlib import Path
 
-DATA_DIR=Path("/home/user/GOOG/data/GOOG")
+DATA_DIR=Path(__file__).resolve().parents[3] / "data" / "GOOG"
 CIK="1652044"  # Alphabet
 HEADERS={"User-Agent":"GOOG Research contact@example.com", "Accept-Encoding":"gzip, deflate"}
 

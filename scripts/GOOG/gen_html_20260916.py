@@ -1,12 +1,15 @@
 import json, os, pandas as pd
+from pathlib import Path
 from datetime import datetime
 
+_ROOT = Path(__file__).resolve().parents[2]
+
 # Load summary
-with open("/home/user/GOOG/reports/GOOG/2026-09-16/quant_summary.json","r",encoding="utf-8") as f:
+with open(str(_ROOT/"reports"/"GOOG"/"2026-09-16"/"quant_summary.json"),"r",encoding="utf-8") as f:
     s=json.load(f)
 
 # Load df for chart
-df=pd.read_csv("/home/user/GOOG/GOOG N=3000.csv", encoding='utf-8-sig', dtype=str)
+df=pd.read_csv(str(_ROOT/"GOOG N=3000.csv"), encoding='utf-8-sig', dtype=str)
 import re
 pattern=re.compile(r'^\d{4}-\d{2}-\d{2}$')
 mask=df['日期'].astype(str).str.match(pattern)
@@ -608,13 +611,13 @@ function searchMod(q){{
 """
 
 # Save main panel
-out_path="/home/user/GOOG/GOOG_OPERATION_PANEL_20260916.html"
+out_path=str(_ROOT/"GOOG_OPERATION_PANEL_20260916.html")
 with open(out_path,"w",encoding="utf-8") as f:
     f.write(html)
 print(f"Wrote {out_path}")
 
 # Also save under reports
-out2="/home/user/GOOG/reports/GOOG/2026-09-16/GOOG_DEEP_DIVE_20260916.html"
+out2=str(_ROOT/"reports"/"GOOG"/"2026-09-16"/"GOOG_DEEP_DIVE_20260916.html")
 with open(out2,"w",encoding="utf-8") as f:
     f.write(html)
 print(f"Wrote {out2}")
@@ -698,6 +701,6 @@ md=f"""# GOOG N=3000 全量深度分析报告 20260916
 - 已覆盖：治理宪法/数据字典/METHODOLOGY 321/双眼/长期跟踪A-M/跟踪协议/量化底座/四维仪/期权玩法/阶梯/回测双实验室/审计防线/周更制/适配五步
 
 """
-with open("/home/user/GOOG/reports/GOOG/2026-09-16/README.md","w",encoding="utf-8") as f:
+with open(str(_ROOT/"reports"/"GOOG"/"2026-09-16"/"README.md"),"w",encoding="utf-8") as f:
     f.write(md)
 print("Wrote README")

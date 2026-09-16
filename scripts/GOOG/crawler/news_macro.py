@@ -4,7 +4,7 @@
 import json, datetime, pathlib
 from pathlib import Path
 
-DATA_DIR=Path("/home/user/GOOG/data/GOOG")
+DATA_DIR=Path(__file__).resolve().parents[3] / "data" / "GOOG"
 
 def create_news():
     news={

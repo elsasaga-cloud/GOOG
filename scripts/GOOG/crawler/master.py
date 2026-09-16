@@ -20,7 +20,7 @@ def main():
         run_script(s)
     print("\n=== All crawlers done ===")
     # List outputs
-    data_dir=Path("/home/user/GOOG/data/GOOG")
+    data_dir=Path(__file__).resolve().parents[2] / "data" / "GOOG"
     for p in data_dir.rglob("*"):
         if p.is_file():
             print(p)
